@@ -1,0 +1,6 @@
+matplotlib
+numpy
+Pillow
+torch
+torchvision
+importlib_resources

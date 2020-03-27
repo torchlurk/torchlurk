@@ -1,0 +1,4 @@
+# Untrack folders
+CIFAR_pretrained/
+sigma/
+flashtorch/tinyimagenet/
