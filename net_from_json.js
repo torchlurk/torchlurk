@@ -1,29 +1,19 @@
-/*
-function openCity(evt, cityName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-          tabcontent[i].style.display = "none";
-        }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-          tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-    document.getElementById(cityName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-*/
 console.log("Coucou!")
+
 if (typeof jQuery == 'undefined'){
   console.log("shit");
   }
 else {
   console.log("wouhou!");
 }
+
+
 $.getJSON("./saved_model/test_model.json",function(json) {
   console.log(json);
   const nearest_sq = n => Math.round(Math.sqrt(n));
   for (x in json) {
+    const FAV_TARGET_CLASS = "fav_hover" + json[x].ind.toString();
+    const EXT_TARGET = "extend_hover" +json[x].ind.toString();
     //add the tab button
     var tab = document.createElement("button");
     tab.className = "tablinks";
@@ -41,8 +31,9 @@ $.getJSON("./saved_model/test_model.json",function(json) {
     var textnode = document.createTextNode(json[x].name);
     title.appendChild(textnode);
     diva.appendChild(title);
-
+    
     //extend images
+    //TODO: make the loop adapt to the number of favourites images in the josn
     for (var i=0;i<4;i++){
       var bigimg = document.createElement("img");
       bigimg.src = "./img_folder/test7.JPEG";
@@ -50,10 +41,10 @@ $.getJSON("./saved_model/test_model.json",function(json) {
       bigimg.style.height = "15%";
       diva.appendChild(bigimg);
       if (i == 0){
-        bigimg.id = "extend_hover"+json[x].ind.toString();
+        bigimg.id = EXT_TARGET;
       }
       else{
-        bigimg.className = "fav_hover" + json[x].ind.toString();
+        bigimg.className = FAV_TARGET_CLASS;
       }
     }
     //add the pics
@@ -81,12 +72,10 @@ $.getJSON("./saved_model/test_model.json",function(json) {
             image.style.width = perc;
             image.style.height = perc;
             const ext_src = image.src;
-            const ext_target = "extend_hover" +json[x].ind.toString();
-            const fav_src = json[x].filters[curr_indx].fav_im;
-            const fav_target = "fav_hover" + json[x].ind.toString();
+            const fav_srcs = json[x].filters[curr_indx].fav_imgs;
             image.addEventListener('mouseover', function() {
-              extend_hover(ext_src,ext_target);
-              extend_fav(fav_src,fav_target);
+              extend_hover(ext_src,EXT_TARGET);
+              extend_fav(fav_srcs,FAV_TARGET_CLASS);
                 });
             //console.log(json[x].filters[(i+j)].fav_im);
             link.appendChild(image);
@@ -110,16 +99,13 @@ function extend_hover(src,target) {
   ext_img.src = src;  
 }
 
-function extend_fav(src,target) {
-  console.log("SOURCE",src);
-  console.log("TARGET",target);
-  ext_img = document.getElementsByClassName(target);
+function extend_fav(srcs,target_class) {
+  console.log("SOURCE",srcs);
+  console.log("TARGET",target_class);
+  ext_img = document.getElementsByClassName(target_class);
   console.log(ext_img);
   for (var i = 0;i<ext_img.length;i++){
-    ext_img[i].src = src;
-  }
-  for (var i = 0;i<ext_img.length;i++){
-    ext_img[i].src = src;
+    ext_img[i].src = srcs[i];
   }
 }
 
