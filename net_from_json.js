@@ -13,6 +13,7 @@ $.getJSON("./saved_model/test_model.json",function(json) {
   const nearest_sq = n => Math.round(Math.sqrt(n));
   for (x in json) {
     const FAV_TARGET_CLASS = "fav_hover" + json[x].ind.toString();
+    const GRAD_TARGET_CLASS = "grad_hover" + json[x].ind.toString();
     const EXT_TARGET = "extend_hover" +json[x].ind.toString();
     //add the tab button
     var tab = document.createElement("button");
@@ -27,14 +28,15 @@ $.getJSON("./saved_model/test_model.json",function(json) {
     var diva = document.createElement("div");
     diva.className = "tabcontent";
     diva.id = json[x].name;
-    var title = document.createElement("h3");
+    var title = document.createElement("h2");
+    title.className = "Center";
     var textnode = document.createTextNode(json[x].name);
     title.appendChild(textnode);
     diva.appendChild(title);
     
     //extend images
     //TODO: make the loop adapt to the number of favourites images in the josn
-    for (var i=0;i<4;i++){
+    for (var i=0;i<7;i++){
       var bigimg = document.createElement("img");
       bigimg.src = "./img_folder/test7.JPEG";
       bigimg.style.width = "15%";
@@ -43,8 +45,11 @@ $.getJSON("./saved_model/test_model.json",function(json) {
       if (i == 0){
         bigimg.id = EXT_TARGET;
       }
-      else{
+      else if (1 <=i && i <=3){
         bigimg.className = FAV_TARGET_CLASS;
+      }
+      else {
+        bigimg.className = GRAD_TARGET_CLASS;
       }
     }
     //add the pics
@@ -73,9 +78,11 @@ $.getJSON("./saved_model/test_model.json",function(json) {
             image.style.height = perc;
             const ext_src = image.src;
             const fav_srcs = json[x].filters[curr_indx].fav_imgs;
+            const grad_srcs = json[x].filters[curr_indx].grad_path;
             image.addEventListener('mouseover', function() {
-              extend_hover(ext_src,EXT_TARGET);
-              extend_fav(fav_srcs,FAV_TARGET_CLASS);
+              extend_id_img(ext_src,EXT_TARGET);
+              extend_class_img(fav_srcs,FAV_TARGET_CLASS);
+              extend_class_img(grad_srcs,GRAD_TARGET_CLASS);
                 });
             //console.log(json[x].filters[(i+j)].fav_im);
             link.appendChild(image);
@@ -92,14 +99,14 @@ $.getJSON("./saved_model/test_model.json",function(json) {
   }
 });
 
-function extend_hover(src,target) {
+function extend_id_img(src,target) {
   console.log("SOURCE",src);
   console.log("TARGET",target);
   ext_img = document.getElementById(target);
   ext_img.src = src;  
 }
 
-function extend_fav(srcs,target_class) {
+function extend_class_img(srcs,target_class) {
   console.log("SOURCE",srcs);
   console.log("TARGET",target_class);
   ext_img = document.getElementsByClassName(target_class);
