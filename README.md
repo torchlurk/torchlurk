@@ -31,9 +31,11 @@ Watch out, run it when no instance of chrome is already running!
 
 ## Structure of the project
 ### Directories
-`documentation` : where to put relevant articles/sources for the project
-`lib`: useful git repositories for the project
-`img_folder`: directory where we store generated images
-`src`: for the source code (frontend) i.e. main.html, main.css and main.js
-`saved_model`: directory where we keep the json structure of each layers/filters for a given NN
-`tiny_imagenet`: data directory, where we store the image for training the NN
+`documentation` : where to put relevant articles/sources for the project<br>
+`lib`: useful git repositories for the project<br>
+`img_folder`: directory where we store generated images<br>
+`src`: for the source code (frontend) i.e. main.html, main.css and main.js<br>
+`saved_model`: directory where we keep the json structure of each layers/filters for a given NN<br>
+`data`: data directory<br>
+-- `tinyimagenet`: subset of imageNet(10 img per class, 1000 classes)<br>
+-- `exsmallimagenet`: subset of tinyimagenet ( variables img and classes) <br>
