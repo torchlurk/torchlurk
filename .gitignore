@@ -1,6 +1,8 @@
 # Untrack folders
-CIFAR_pretrained/
-sigma/
-tinyimagenet/
+img_folder/gradients/
+img_folder/max_activ/
+data/tinyimagenet/train/
+data/tinyimagenet/val/
+data/exsmallimagenet/
 exsmallimagenet/
-img_folder/
+documentation/
