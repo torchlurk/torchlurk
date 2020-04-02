@@ -4,31 +4,67 @@ Developping a front-end focused library aiming at making visualization of pytorc
 
 | Student's name | SCIPER |
 | -------------- | ------ |
-| Yann Mentha | 252256 |
-| Gianni Guisto| 251795 |
-| Julien Berger| 247179 |
+| Yann Mentha    | 252256 |
+| Gianni Guisto  | 251795 |
+| Julien Berger  | 247179 |
 
 [Milestone 1](#milestone-1-friday-3rd-april-5pm) • [Milestone 2](#milestone-2-friday-1st-may-5pm) • [Milestone 3](#milestone-3-thursday-28th-may-5pm)
 
-### Milestone 1 (Friday 3rd April, 5pm)
+_____
+## Milestone 1 (Friday 3rd April, 5pm)
 
 **10% of the final grade**
 
-Watch out, run it when no instance of chrome is already running!
-`google-chrome --allow-file-access-from-files test.html`
+### Abstract
+
+In the past recent years, Convolutional Neural Networks (CNN) have shown impressive capabilities in image recognition tasks even outperforming humans. Despite undeniable success in all field of science, one can wonder why do these processing paradigms perform so well. Indeed, complexity increases along with the number of layers and internal computation lack of transparency for the user.
+
+This project aims to develop a visualization tool to ease the interpretation of trained CNN and give insights to the user about what the network is actually learning. The name `Torch-` refers to the use of the PyTorch framework and `-lurk` to our willingness to unveil the intrinsic abstraction levels that are _'hidden'_ in these CNNs.
+
+### Motivation
+PyTorch is one of the most used deep learing framework and it just keeps getting more and more popular. Nevertheless, we feel like it lacks practical visual tool associated to it to get insights about network structure. We believe that is a great opportunity to develop such a tool as part of this course as it combines _utility_ to _visualization_.
+
+### Approach
+#### Backend
+The `backend` insures that the data is properly formated so that it can be used interactively in the frontend. Analysis involving model training are carried out using Python and the PyTorch framework. For now, we use networks such as _VGG16_ pretrained on CIFAR-10 dataset. We also make use of existing PyTorch CNN visualization libraries that enable to display _gradient_ and _filters_ (see [here](https://github.com/utkuozbulak/pytorch-cnn-visualizations)). Best responding images and filters are saved into _JSON_.
 
 
-### Milestone 2 (Friday 1st May, 5pm)
+#### Frontend
+The goal of the `frontend` is to provide a user-friendly and intuitive interface to navigate through the network and analyse its internal states. It will enable the user to navigate through layers and examine it. An example of application we wish to offer (non-exhaustive list which may change according to the progress of the project): 
+* visualize the structure of the network
+* display most significant images activating a given neuron
+* from a feature map, we want to project back the feature map thanks to deconvolution in order to isolate the pixel(s) responsible for the given activation
+
+Network dynamical visualization are done using JavaScript and the library `D3.js`. To grasp the idea of our project, you are invited to open the HTML file `test.html` with the command (when no instance of chrome is already running):
+
+```
+google-chrome --allow-file-access-from-files test.html
+```
+
+### Road to Milestone 2
+We provide here a working beta version to show the direction we are taking in this project. By milestone 2, we will in particular:
+* display network architecture
+* include more network architectures
+* improve the HTML visually and make it intuitive
+* use deconvolution to project back the output to the input
+
+### References
+M. D. Zeiler and R. Fergus, _Visualizing and Understanding Convolutional Networks_. In _arXiv:1311.2901_, 2013. Available: https://arxiv.org/abs/1311.2901
+
+
+_____
+## Milestone 2 (Friday 1st May, 5pm)
 
 **10% of the final grade**
 
 
 
-
-### Milestone 3 (Thursday 28th May, 5pm)
+_____
+## Milestone 3 (Thursday 28th May, 5pm)
 
 **80% of the final grade**
 
+_____
 ## Structure of the project
 ### Directories
 `documentation` : where to put relevant articles/sources for the project<br>
