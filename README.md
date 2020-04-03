@@ -69,9 +69,12 @@ _____
 ### Directories
 `documentation` : where to put relevant articles/sources for the project<br>
 `lib`: useful git repositories for the project<br>
-`img_folder`: directory where we store generated images<br>
+`results`: directory where we store generated images for multiple runs<br>
 `src`: for the source code (frontend) i.e. main.html, main.css and main.js<br>
 `saved_model`: directory where we keep the json structure of each layers/filters for a given NN<br>
 `data`: data directory<br>
 -- `tinyimagenet`: subset of imageNet(10 img per class, 1000 classes)<br>
 -- `exsmallimagenet`: subset of tinyimagenet ( variables img and classes) <br>
+`src`: source code
+-- `Torchlurk.ipynb`: backend code
+-- `main.css,main.html,main.js`:frontend interface
