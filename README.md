@@ -26,7 +26,7 @@ PyTorch is one of the most used deep learing framework and it just keeps getting
 
 ### Approach
 #### Backend
-The `backend` insures that the data is properly formated so that it can be used interactively in the frontend. Analysis involving model training are carried out using Python and the PyTorch framework. For now, we use networks such as _VGG16_ pretrained on CIFAR-10 dataset. We also make use of existing PyTorch CNN visualization libraries that enable to display _gradient_ and _filters_ (see [here](https://github.com/utkuozbulak/pytorch-cnn-visualizations)). Best responding images and filters are saved into _JSON_.
+The `backend` insures that the data is properly formated so that it can be used interactively in the frontend. Analysis involving images computation are carried out using Python and the PyTorch framework. For now, we use networks such as _VGG16_ pretrained on the ImageNet dataset. We also make use of existing PyTorch CNN visualization libraries that enable to display _gradient_ and _filters_ (see [here](https://github.com/utkuozbulak/pytorch-cnn-visualizations)). Best responding images and filters are saved into _JSON_ file format.
 
 
 #### Frontend
