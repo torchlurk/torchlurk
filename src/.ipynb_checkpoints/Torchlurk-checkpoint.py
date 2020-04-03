@@ -162,10 +162,10 @@ class Lurk():
                     filtr["spikes"] = np.array(filtr["spikes"])[avg_indx].tolist()
                     filtr["fav_imgs"] = np.array(filtr["fav_imgs"])[avg_indx].tolist()
 
-    def update_favims_model(self,verbose = False):
+    def compute_avgmax_imgs(self,verbose = False):
         """
-        update all the layers of the model_info such that each filter of each layer knows what are
-        its favourite images (write it down in json)
+        compute the average and max images for all the layers of the model_info such that each filter of each layer knows what are
+        its favourite images (write down the link to the avg/max images in the json)
         """
         for j,(datas,labels,paths) in enumerate(self.data_loader):
             print("Progression update favimgs:{:.2f} %".format(j/len(self.data_loader) * 100))
@@ -263,7 +263,7 @@ class Lurk():
     def compute_filter_actmax(self,layer_indx,indexes = None):
         """
         compute  and save the filter maximal activation as an image. Compute it only for filters for which
-        it has not been computed yet: delte the existing image for a refresh.
+        it has not been computed yet: you need to delete the existing image if you wish for a refresh.
         """
         lay_info = self.model_info[layer_indx]
         if indexes is None:

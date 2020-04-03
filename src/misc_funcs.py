@@ -3,6 +3,11 @@ import torch.nn as nn
 from pathlib import Path
 import os
 from torchvision.utils import save_image
+from PIL import Image
+from torchvision import transforms
+from IPython.display import clear_output
+from shutil import copyfile
+
 
 
 def create_folders(path,direc_types,model_info):
@@ -27,19 +32,28 @@ def create_folders(path,direc_types,model_info):
                     
 def clean_bw_imgs(path_to_imgs_dirs):
     """
+    Cleans the tinyimagenet from its bw images.
     Args:
         path_to_imgs_dirs(str):path to the train or val folder of ImageNet
     """
+    print("BW cleaning started")
+    list_bw = []
     for i,(root, dirs, files) in enumerate(os.walk(path_to_imgs_dirs,topdown=False)):
+        clear_output(wait=True)
+        print("Progression:{:.2f}%".format(i/1000*100))
         for name in files:
             path = os.path.join(root, name)
             image = Image.open(path)
             image = transforms.ToTensor()(image)
             if image.shape != torch.Size([3,224,224]):
-                print(path)
+                list_bw.append(path)
                 image = torch.stack([image,image,image],dim  =1).squeeze(0)
                 assert(image.shape ==torch.Size([3,224,224]))
                 save_image(image,path)
+    print("BW files found:")
+    for i in list_bw:
+        print(i)
+    print("BW cleaning terminated.")
                 
 def sample_imagenet(src_path_imgs,trgt_pathname_imgs,img_num_per_dir = 1):
     """
@@ -51,14 +65,17 @@ def sample_imagenet(src_path_imgs,trgt_pathname_imgs,img_num_per_dir = 1):
     assert(img_num_per_dir >=1)
     #target_path = "./data/exsmallimagenet"
     #src_path = "./data/tinyimagenet/train/"
-
+    print("Start sampling")
     Path(trgt_pathname_imgs).mkdir(parents=True, exist_ok=True)
     for num_subfold,subfold in enumerate(os.listdir(src_path_imgs)):
-        subfold_trget_path = os.path.join(target_path,subfold)
-        subfold_src_path = os.path.join(src_path,subfold)
+        clear_output(wait=True)
+        print("Progression:{:.2f}%".format(num_subfold/1000*100))
+        subfold_trget_path = os.path.join(trgt_pathname_imgs,subfold)
+        subfold_src_path = os.path.join(src_path_imgs,subfold)
         # create the directory
         Path(subfold_trget_path).mkdir(parents=True,exist_ok=True)
         for i,file in enumerate(os.listdir(subfold_src_path)):
             if i >= img_num_per_dir:
                 break
             copyfile(os.path.join(subfold_src_path,file),os.path.join(subfold_trget_path,file))
+    print("Sampling terminated.")
