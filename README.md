@@ -75,6 +75,6 @@ _____
 `data`: data directory<br>
 -- `tinyimagenet`: subset of imageNet(10 img per class, 1000 classes)<br>
 -- `exsmallimagenet`: subset of tinyimagenet ( variables img and classes) <br>
-`src`: source code
+`src`: source code <br>
 -- `Torchlurk.ipynb`: backend code
 -- `main.css,main.html,main.js`:frontend interface
