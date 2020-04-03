@@ -8,7 +8,7 @@ else {
 }
 
 
-$.getJSON("../saved_model/03_04_20.json",function(json) {
+$.getJSON("../saved_model/03_02_20_1200.json",function(json) {
   console.log(json);
   const nearest_sq = n => Math.round(Math.sqrt(n));
   for (x in json) {
