@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 from pathlib import Path
 import os
+from torchvision.utils import save_image
+
 
 def create_folders(path,direc_types,model_info):
     """
@@ -22,3 +24,41 @@ def create_folders(path,direc_types,model_info):
                 for j,filt in enumerate(lay_info['filters']):
                     subpath3 = os.path.join(subpath2,str(filt["id"]))
                     Path(subpath3).mkdir(parents=False, exist_ok=True)
+                    
+def clean_bw_imgs(path_to_imgs_dirs):
+    """
+    Args:
+        path_to_imgs_dirs(str):path to the train or val folder of ImageNet
+    """
+    for i,(root, dirs, files) in enumerate(os.walk(path_to_imgs_dirs,topdown=False)):
+        for name in files:
+            path = os.path.join(root, name)
+            image = Image.open(path)
+            image = transforms.ToTensor()(image)
+            if image.shape != torch.Size([3,224,224]):
+                print(path)
+                image = torch.stack([image,image,image],dim  =1).squeeze(0)
+                assert(image.shape ==torch.Size([3,224,224]))
+                save_image(image,path)
+                
+def sample_imagenet(src_path_imgs,trgt_pathname_imgs,img_num_per_dir = 1):
+    """
+    create another directory similar to imagenet with a smaller number of images per class
+    Args:
+        src_path_imgs(str): path to train or val directory of ImageNet
+        trgt_path_imgs(str): path + name of the folder which will keep the imagenet samples
+    """
+    assert(img_num_per_dir >=1)
+    #target_path = "./data/exsmallimagenet"
+    #src_path = "./data/tinyimagenet/train/"
+
+    Path(trgt_pathname_imgs).mkdir(parents=True, exist_ok=True)
+    for num_subfold,subfold in enumerate(os.listdir(src_path_imgs)):
+        subfold_trget_path = os.path.join(target_path,subfold)
+        subfold_src_path = os.path.join(src_path,subfold)
+        # create the directory
+        Path(subfold_trget_path).mkdir(parents=True,exist_ok=True)
+        for i,file in enumerate(os.listdir(subfold_src_path)):
+            if i >= img_num_per_dir:
+                break
+            copyfile(os.path.join(subfold_src_path,file),os.path.join(subfold_trget_path,file))
