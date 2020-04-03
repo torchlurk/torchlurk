@@ -35,7 +35,7 @@ class CNNLayerVisualization():
         # Hook the selected layer
         self.model[self.selected_layer].register_forward_hook(hook_function)
 
-    def visualise_layer_with_hooks(self):
+    def visualise_layer_with_hooks(self,verbose=False):
         # Hook the selected layer
         self.hook_layer()
         # Generate a random image
@@ -60,7 +60,8 @@ class CNNLayerVisualization():
             # Loss function is the mean of the output of the selected layer/filter
             # We try to minimize the mean of the output of that specific filter
             loss = -torch.mean(self.conv_output)
-            print('Iteration:', str(i), 'Loss:', "{0:.2f}".format(loss.data.numpy()))
+            if verbose:
+                print('Iteration:', str(i), 'Loss:', "{0:.2f}".format(loss.data.numpy()))
             # Backward
             loss.backward()
             # Update image
@@ -68,10 +69,7 @@ class CNNLayerVisualization():
             # Recreate image
             self.created_image = recreate_image(processed_image)
             # Save image
-            if i % 5 == 0:
-                im_path = '../generated/layer_vis_l' + str(self.selected_layer) + \
-                    '_f' + str(self.selected_filter) + '_iter' + str(i) + '.jpg'
-                save_image(self.created_image, im_path)
+        return self.created_image
 
     def visualise_layer_without_hooks(self):
         # Process image and return variable

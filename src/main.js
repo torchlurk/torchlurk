@@ -8,13 +8,13 @@ else {
 }
 
 
-$.getJSON("../saved_model/test_model.json",function(json) {
+$.getJSON("../saved_model/03_04_20.json",function(json) {
   console.log(json);
   const nearest_sq = n => Math.round(Math.sqrt(n));
   for (x in json) {
-    const FAV_TARGET_CLASS = "fav_hover" + json[x].ind.toString();
-    const GRAD_TARGET_CLASS = "grad_hover" + json[x].ind.toString();
-    const EXT_TARGET = "extend_hover" +json[x].ind.toString();
+    const FAV_TARGET_CLASS = "fav_hover" + json[x].id.toString();
+    const GRAD_TARGET_CLASS = "grad_hover" + json[x].id.toString();
+    const EXT_TARGET = "extend_hover" +json[x].id.toString();
     //add the tab button
     var tab = document.createElement("button");
     tab.className = "tablinks";
@@ -78,7 +78,7 @@ $.getJSON("../saved_model/test_model.json",function(json) {
             image.style.height = perc;
             const ext_src = image.src;
             const fav_srcs = json[x].filters[curr_indx].fav_imgs;
-            const grad_srcs = json[x].filters[curr_indx].grad_path;
+            const grad_srcs = json[x].filters[curr_indx].grad_path_avg;
             image.addEventListener('mouseover', function() {
               extend_id_img(ext_src,EXT_TARGET);
               extend_class_img(fav_srcs,FAV_TARGET_CLASS);

@@ -79,8 +79,8 @@ class GuidedBackprop():
         conv_output.backward()
         # Convert Pytorch variable to numpy array
         # [0] to get rid of the first channel (1,3,224,224)
-        gradients_as_arr = self.gradients.data.numpy()[0]
-        return gradients_as_arr
+        #gradients_as_arr = self.gradients.data.numpy()[0]
+        return self.gradients
 
 
 if __name__ == '__main__':
