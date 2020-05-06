@@ -4,6 +4,7 @@ img_folder/max_activ/
 data/tinyimagenet/train/
 data/tinyimagenet/val/
 data/exsmallimagenet/
+data/50classes
 exsmallimagenet/
 documentation/
 results/

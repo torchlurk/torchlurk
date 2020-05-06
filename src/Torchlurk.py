@@ -130,7 +130,7 @@ class Lurk():
                     #lay_info["filters"] = [empty_filter.copy() for i in range(n_output)]
             model_info.append(lay_info)
         return model_info
-    
+    03_04_20
     def get_filt_string(self,dir_type,layer_name,filter_id):
         """
         return the path to the appropriate folder
