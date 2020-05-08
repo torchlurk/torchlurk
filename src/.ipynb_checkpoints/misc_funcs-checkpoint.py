@@ -79,3 +79,12 @@ def sample_imagenet(src_path_imgs,trgt_pathname_imgs,img_num_per_dir = 1):
                 break
             copyfile(os.path.join(subfold_src_path,file),os.path.join(subfold_trget_path,file))
     print("Sampling terminated.")
+
+def plot_hist(obj):
+    """
+    plot the histogram of a filter
+    Args:
+        obj(dictionary):map the classes labels to their average score (max/avg)
+    """
+    fig,ax = plt.subplots(1,1,figsize=(10,20))
+    ax.barh(list(labcounts.keys()),labcounts.values())
