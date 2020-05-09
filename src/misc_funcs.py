@@ -10,8 +10,6 @@ from shutil import copyfile
 from IPython.core.debugger import set_trace
 
 
-
-
 def create_folders(path,direc_types,model_info):
     """
     create the directories to stock the generated images
