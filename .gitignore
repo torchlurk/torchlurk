@@ -5,6 +5,7 @@ data/tinyimagenet/train/
 data/tinyimagenet/val/
 data/exsmallimagenet/
 data/50classes
+data/
 data/imagenet-mini/
 exsmallimagenet/
 documentation/
