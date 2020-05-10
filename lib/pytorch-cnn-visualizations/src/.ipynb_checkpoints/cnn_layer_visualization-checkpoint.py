@@ -18,7 +18,8 @@ class CNNLayerVisualization():
         Produces an image that minimizes the loss of a convolution
         operation for a specific layer and filter
     """
-    def __init__(self, model, selected_layer, selected_filter):
+    def __init__(self, model, selected_layer, selected_filter,side_size=224):
+        self.side_size = side_size
         self.model = model
         self.model.eval()
         self.selected_layer = selected_layer
@@ -39,7 +40,7 @@ class CNNLayerVisualization():
         # Hook the selected layer
         self.hook_layer()
         # Generate a random image
-        random_image = np.uint8(np.random.uniform(150, 180, (224, 224, 3)))
+        random_image = np.uint8(np.random.uniform(150, 180, (self.side_size, self.side_size, 3)))
         # Process image and return variable
         processed_image = preprocess_image(random_image, False)
         # Define optimizer for the image
@@ -74,7 +75,7 @@ class CNNLayerVisualization():
     def visualise_layer_without_hooks(self):
         # Process image and return variable
         # Generate a random image
-        random_image = np.uint8(np.random.uniform(150, 180, (224, 224, 3)))
+        random_image = np.uint8(np.random.uniform(150, 180, (self.side_size, self.side_size, 3)))
         # Process image and return variable
         processed_image = preprocess_image(random_image, False)
         # Define optimizer for the image
