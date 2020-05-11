@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from pathlib import Path
 import os
+import pandas as pd
 from torchvision.utils import save_image
 from PIL import Image
 from torchvision import transforms
@@ -74,7 +75,7 @@ def clean_bw_imgs(path_to_imgs_dirs):
         print(i)
     print("BW cleaning terminated.")
                 
-def sample_imagenet(src_path_imgs,trgt_pathname_imgs,num_dir=None,img_num_per_dir = 1):
+def sample_imagefolder(src_path_imgs,trgt_pathname_imgs,num_dir=None,img_num_per_dir = 1):
     """
     create another directory similar to imagenet with a smaller number of images per class
     Args:
@@ -87,8 +88,8 @@ def sample_imagenet(src_path_imgs,trgt_pathname_imgs,num_dir=None,img_num_per_di
     #target_path = "./data/exsmallimagenet"
     #src_path = "./data/tinyimagenet/train/"
     print("Start sampling")
-    Path(trgt_pathname_imgs).mkdir(parents=True, exist_ok=True)
-    img_path = os.path.join(trgt_pathname_imgs,'images')
+    img_path = Path(trgt_pathname_imgs)
+    img_path.mkdir(parents=True, exist_ok=True)
     Path(img_path).mkdir(parents=True, exist_ok=True)
     if num_dir is None:
         num_dir = len([i for i in os.listdir(path_to_imgs_dirs) if os.path.isdir(os.path.join(path_to_imgs_dirs,i))])
@@ -115,3 +116,25 @@ def plot_hist(obj):
     """
     fig,ax = plt.subplots(1,1,figsize=(10,20))
     ax.barh(list(labcounts.keys()),labcounts.values())
+    
+def convert_to_jpg_dirs(dataset,target_dir):
+    """convert a given dataset to the accepted easy-structured directories"""
+    target_dir = Path(target_dir)
+    target_dir.mkdir(parents=False,exist_ok=True)
+
+    lab2title = {j:i for i,j in dataset.class_to_idx.items()}
+    for i,image_lab in enumerate(dataset):
+        clear_output(wait=True)
+        print("Progression:{:.2f} %".format(i/len(dataset)*100))
+        class_title = lab2title[image_lab[1]]
+        class_dir  = target_dir.joinpath(class_title)
+        class_dir.mkdir(parents=False,exist_ok=True)
+        smple_path = class_dir.joinpath(class_dir.stem + "_" + str(i)+".jpg")
+        image_lab[0].save(str(smple_path))
+        
+def create_labels(class_to_idx,target_path):
+    """create a labels.txt file from the class_to_idx issue from the torch.dataset"""
+    df = pd.DataFrame([[key,val,key] for key,val in class_to_idx.items()])
+    df.columns = ['dir_name','label','title']
+    df.set_index('dir_name',inplace=True)
+    df.to_csv(target_path,header=None,sep=" ")

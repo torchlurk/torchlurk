@@ -1,5 +1,7 @@
 # Untrack folders
 img_folder/gradients/
+models/
+bigdata/
 img_folder/max_activ/
 data/tinyimagenet/train/
 data/tinyimagenet/val/
