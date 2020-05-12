@@ -99,3 +99,15 @@ img:hover {
   border-radius: 10px;
   opacity: 1;
 }
+#indicator {
+    margin: auto; 
+    width: 15%;
+    height: 8%;
+    background-color: green;
+    border: 1px solid #dddddd;
+}
+.Fixed
+{
+    position: fixed;
+    top: 20px;
+}

@@ -1,5 +1,6 @@
 # Untrack folders
 img_folder/gradients/
+static/data/
 models/
 generated/
 bigdata/

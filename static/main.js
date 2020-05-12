@@ -10,10 +10,11 @@ else {
 };
 
 
-function set_tab(){$.getJSON("static/saved_model/vgg16flask.json",function(json) {
+const path = "static/saved_model/vgg16_imagenet.json"
+function set_tab(){$.getJSON(path,function(json_state) {
     //console.log("creating tabs!");
-    //console.log(json);
     const nearest_sq = n => Math.round(Math.sqrt(n));
+    const json = json_state.infos
     for (x in json) {
       const FAV_TARGET_CLASS = "fav_hover" + json[x].id.toString();
       const GRAD_TARGET_CLASS = "grad_hover" + json[x].id.toString();
@@ -31,13 +32,16 @@ function set_tab(){$.getJSON("static/saved_model/vgg16flask.json",function(json)
 }
 set_tab();
 first_json();
-setInterval(fresh_json,10000);
+fresh_json();
+setInterval(fresh_json,4000);
 
-function first_json(){$.getJSON("static/saved_model/vgg16flask.json",
-  function(json) {
+function first_json(){$.getJSON(path,
+  function(json_state) {
     //console.log(json);
+    json = json_state.infos
     console.log("first time")
-    console.log(json[0]['filters'][0]['avg_imgs'][0])
+    console.log(json_state['state']);
+    //console.log(json_state['infos'][0]['filters'][0]['avg_imgs'][0])
     const nearest_sq = n => Math.round(Math.sqrt(n));
     for (x in json) {
       const FAV_TARGET_CLASS = "fav_hover" + json[x].id.toString();
@@ -121,11 +125,24 @@ function first_json(){$.getJSON("static/saved_model/vgg16flask.json",
 }
 
 
-function fresh_json(){$.getJSON("static/saved_model/vgg16flask.json",
-  function(json) {
+function fresh_json(){$.getJSON(path,
+  function(json_state) {
     console.log("refresh")
-    console.log(json[0]['filters'][0]['avg_imgs'][0])
+    console.log(json_state['state']);
+    //console.log(json_state['infos'][0]['filters'][0]['avg_imgs'][0])
+    state = json_state['state']
+    if(state == 'idle'){
+          $('#indicator').css('background-color', 'green');
+    }else if (state == 'compute top'){
+          $('#indicator').css('background-color', 'red');
+    }else if (state == 'compute activ'){
+          $('#indicator').css('background-color', 'orange');
+    }else if (state == 'compute grad'){
+          $('#indicator').css('background-color', 'purple');
+    }
+    $('#indicator').html("<p>"+state+"</p>");
     const nearest_sq = n => Math.round(Math.sqrt(n));
+    json = json_state.infos
     for (x in json) {
       const FAV_TARGET_CLASS = "fav_hover" + json[x].id.toString();
       const GRAD_TARGET_CLASS = "grad_hover" + json[x].id.toString();
