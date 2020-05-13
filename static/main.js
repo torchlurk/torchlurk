@@ -9,8 +9,11 @@ else {
   console.log("wouhou2!");
 };
 
-
-const path = "static/saved_model/vgg16_imagenet.json"
+//const path = "/static/saved_model/vgg16_imagenet.json"
+//const path =url_for('static',filename='saved_model/vgg16_imagenet.json')
+//const path = "/saved_model/vgg16_imagenet.json"
+const path = "/saved_model/alex_places.json"
+console.log(path);
 function set_tab(){$.getJSON(path,function(json_state) {
     //console.log("creating tabs!");
     const nearest_sq = n => Math.round(Math.sqrt(n));
