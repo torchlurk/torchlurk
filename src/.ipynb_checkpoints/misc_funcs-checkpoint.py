@@ -10,7 +10,12 @@ from IPython.display import clear_output
 from shutil import copyfile
 from IPython.core.debugger import set_trace
 
-
+def rename_directories(dir_path,dic):
+    for p in pathlib.Path(dir_path).iterdir():
+        if p.is_dir():
+             assert(p.name in dic.keys())
+        p.rename(p.parent.joinpath(dic[p.name]))
+    print("Renaming successful!")
 def create_folders(path,direc_types,model_info):
     """
     create the directories to stock the generated images

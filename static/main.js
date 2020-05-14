@@ -12,9 +12,21 @@ else {
 //const path = "/static/saved_model/vgg16_imagenet.json"
 //const path =url_for('static',filename='saved_model/vgg16_imagenet.json')
 //const path = "/saved_model/vgg16_imagenet.json"
-const path = "/saved_model/alex_places.json"
-console.log(path);
-function set_tab(){$.getJSON(path,function(json_state) {
+var json_path = (function () {
+      var json = null;
+      $.ajax({
+                'async': false,
+                'global': false,
+                'url': "/saved_model/.current.json",
+                'dataType': "json",
+                'success': function (data) {
+                              json = data;
+                          }
+            });
+      return json.current_json;
+})(); 
+console.log("LOADING",json_path)
+function set_tab(){$.getJSON(json_path,function(json_state) {
     //console.log("creating tabs!");
     const nearest_sq = n => Math.round(Math.sqrt(n));
     const json = json_state.infos
@@ -38,7 +50,7 @@ first_json();
 fresh_json();
 setInterval(fresh_json,4000);
 
-function first_json(){$.getJSON(path,
+function first_json(){$.getJSON(json_path,
   function(json_state) {
     //console.log(json);
     json = json_state.infos
@@ -128,7 +140,7 @@ function first_json(){$.getJSON(path,
 }
 
 
-function fresh_json(){$.getJSON(path,
+function fresh_json(){$.getJSON(json_path,
   function(json_state) {
     console.log("refresh")
     console.log(json_state['state']);
@@ -136,11 +148,11 @@ function fresh_json(){$.getJSON(path,
     state = json_state['state']
     if(state == 'idle'){
           $('#indicator').css('background-color', 'green');
-    }else if (state == 'compute top'){
+    }else if (state == 'compute_top'){
           $('#indicator').css('background-color', 'red');
-    }else if (state == 'compute activ'){
+    }else if (state == 'compute_activ'){
           $('#indicator').css('background-color', 'orange');
-    }else if (state == 'compute grad'){
+    }else if (state == 'compute_grad'){
           $('#indicator').css('background-color', 'purple');
     }
     $('#indicator').html("<p>"+state+"</p>");
