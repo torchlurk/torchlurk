@@ -1,0 +1,6 @@
+README.md
+setup.py
+torchlurk.egg-info/PKG-INFO
+torchlurk.egg-info/SOURCES.txt
+torchlurk.egg-info/dependency_links.txt
+torchlurk.egg-info/top_level.txt
