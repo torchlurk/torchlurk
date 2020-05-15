@@ -1,80 +1,15 @@
-# Project of Data Visualization (COM-480)
 # Torchlurk
-Developping a front-end focused library aiming at making visualization of pytorch CNN easier, more accessible and more intuitive.
 
-| Student's name | SCIPER |
-| -------------- | ------ |
-| Yann Mentha    | 252256 |
-| Gianni Guisto  | 251795 |
-| Julien Berger  | 247179 |
+CNNs do a great job at recognizing images (so far). Troubles arrive when it comes to talk about interprability of the network: although one coded the network in question, and one knows all the tips and tricks necessary to train it efficiently, one does not necessarily know **how** it generates the output from a given image.
 
-[Milestone 1](#milestone-1-friday-3rd-april-5pm) • [Milestone 2](#milestone-2-friday-1st-may-5pm) • [Milestone 3](#milestone-3-thursday-28th-may-5pm)
+Torchlurk aims at allowing any user to visualize his/her Pytorch network in an efficient yet simple manner, providing a similar interface as [Microscope](https://microscope.openai.com/models/alexnet/conv5_1_0) tailored for a specific CNN network. All you need is the trained pytorch network and its training set. That's it.
 
-_____
-## Milestone 1 (Friday 3rd April, 5pm)
+GIF using interface
 
-**10% of the final grade**
+## Installation
+Torchlurk is available on pip! Just run `pip install pytorch`
 
-### Abstract
+## Documentation
+Torchlurk has [an online documentation](...) which gets regularly updated
 
-In the past recent years, Convolutional Neural Networks (CNN) have shown impressive capabilities in image recognition tasks even outperforming humans. Despite undeniable success in all field of science, one can wonder why do these processing paradigms perform so well. Indeed, complexity increases along with the number of layers and internal computation lack of transparency for the user.
-
-This project aims to develop a visualization tool to ease the interpretation of trained CNN and give insights to the user about what the network is actually learning. The name `Torch-` refers to the use of the PyTorch framework and `-lurk` to our willingness to unveil the intrinsic abstraction levels that are _'hidden'_ in these CNNs.
-
-### Motivation
-PyTorch is one of the most used deep learing framework and it just keeps getting more and more popular. Nevertheless, we feel like it lacks practical visual tool associated to it to get insights about network structure. We believe that is a great opportunity to develop such a tool as part of this course as it combines _utility_ to _visualization_.
-
-### Approach
-#### Backend
-The `backend` insures that the data is properly formated so that it can be used interactively in the frontend. Analysis involving images computation are carried out using Python and the PyTorch framework. For now, we use networks such as _VGG16_ pretrained on the ImageNet dataset. We also make use of existing PyTorch CNN visualization libraries that enable to display _gradient_ and _filters_ (see [here](https://github.com/utkuozbulak/pytorch-cnn-visualizations)). Best responding images and filters are saved into _JSON_ file format.
-
-
-#### Frontend
-The goal of the `frontend` is to provide a user-friendly and intuitive interface to navigate through the network and analyse its internal states. It will enable the user to navigate through layers and examine it. An example of application we wish to offer (non-exhaustive list which may change according to the progress of the project): 
-* visualize the structure of the network
-* display most significant images activating a given neuron
-* from a feature map, we want to project back the feature map thanks to deconvolution in order to isolate the pixel(s) responsible for the given activation
-
-Network dynamical visualization are done using JavaScript and the library `D3.js`. To grasp the idea of our project, you are invited to open the HTML file `test.html` with the command (when no instance of chrome is already running):
-
-```
-google-chrome --allow-file-access-from-files test.html
-```
-
-### Road to Milestone 2
-We provide here a working beta version to show the direction we are taking in this project. By milestone 2, we will in particular:
-* display network architecture
-* include more network architectures
-* improve the HTML visually and make it intuitive
-* use deconvolution to project back the output to the input
-
-### References
-M. D. Zeiler and R. Fergus, _Visualizing and Understanding Convolutional Networks_. In _arXiv:1311.2901_, 2013. Available: https://arxiv.org/abs/1311.2901
-
-
-_____
-## Milestone 2 (Friday 1st May, 5pm)
-
-**10% of the final grade**
-
-
-
-_____
-## Milestone 3 (Thursday 28th May, 5pm)
-
-**80% of the final grade**
-
-_____
-## Structure of the project
-### Directories
-`documentation` : where to put relevant articles/sources for the project<br>
-`lib`: useful git repositories for the project<br>
-`results`: directory where we store generated images for multiple runs<br>
-`src`: for the source code (frontend) i.e. main.html, main.css and main.js<br>
-`saved_model`: directory where we keep the json structure of each layers/filters for a given NN<br>
-`data`: data directory<br>
--- `tinyimagenet`: subset of imageNet(10 img per class, 1000 classes)<br>
--- `exsmallimagenet`: subset of tinyimagenet ( variables img and classes) <br>
-`src`: source code <br>
--- `Torchlurk.ipynb`: backend code
--- `main.css,main.html,main.js`:frontend interface
+## 
