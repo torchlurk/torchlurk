@@ -1,0 +1,8 @@
+dill
+flask
+matplotlib
+pandas
+torchvision
+pytorch
+numpy
+
