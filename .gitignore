@@ -1,16 +1,10 @@
-# Untrack folders
-img_folder/gradients/
-static/data/
-models/
-generated/
-bigdata/
-img_folder/max_activ/
-data/tinyimagenet/train/
-data/tinyimagenet/val/
-data/exsmallimagenet/
-data/50classes
-data/
-data/imagenet-mini/
-exsmallimagenet/
+# exclude everything
+bigdata/*
+data/*
+results/*
+torchlurk/models/*
+# exception to the rule
+!bigdata/.gitkeep 
+!results/.gitkeep 
+!data/numb.png
 documentation/
-results/
