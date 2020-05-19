@@ -349,17 +349,19 @@ class Lurk():
         self.__normalize_histos()
         self.__sort_filters_spikes()
         if save_loc:
-            self.__save_avgmax_imgs()
+            self.save_avgmax_imgs()
         self.__save_cropped()
         self.set_state(State.idle)
         self.save_to_json()
 
         
-    def __save_avgmax_imgs(self):
+    def save_avgmax_imgs(self):
         """
         save the maximum average/maximum activation for each filter from the trainin set
         """
-        for lay_info in self.conv_layinfos:
+        for i,lay_info in enumerate(self.conv_layinfos):
+            clear_output(wait=True)
+            print("Saving top_avg_max progression {:.2f} %".format(i/len(self.conv_layinfos)*100))
             for filtr in lay_info['filters']:
                 for agg in ["avg","max"]:
                     for i,src_path in enumerate(filtr["{}_imgs".format(agg)]):
@@ -369,7 +371,8 @@ class Lurk():
                         #we open the path pointing to the training set
                         im = Image.open(src_path)
                         im.save(new_path)
-                        filtr["{}_imgs".format(agg)][i] = new_path
+                        filtr["{}_imgs".format(agg)][i] = str(new_path)
+        self.save_to_json()
                     
     def __sort_filters_spikes(self):
         """
@@ -492,7 +495,7 @@ class Lurk():
                     
     ################################ Layer visualizations ################################
                     
-    def compute_viz(self,num_imgs_per_layer=None,ratio_imgs_per_layer=None):
+    def compute_viz(self,num_imgs_per_layer=None,ratio_imgs_per_layer=None,first_n_imgs=None):
         """
         Compute the filter visualization for all classes
         Args:
@@ -500,18 +503,23 @@ class Lurk():
             ratio_imgs_per_layer(float): ratio of filters to compute the visualization for for each class
         """
         self.set_state(State.compute_activ)
-        checks = [num_imgs_per_layer is not None , ratio_imgs_per_layer is not None]
+        checks = [num_imgs_per_layer is not None , ratio_imgs_per_layer is not None,first_n_imgs is not None]
         assert(sum(checks)==1 or sum(checks)==0)
         for lay_indx,lay_info in enumerate(self.conv_layinfos):
             print("Layer {}:".format(lay_info['id']))
             N = lay_info["lay"].out_channels
-            indexes = np.arange(N)
-            np.random.shuffle(indexes)
+           
             if checks[0]:
+                indexes = np.arange(N)
+                np.random.shuffle(indexes)
                 indexes = indexes[:num_imgs_per_layer]
             elif checks[1]:
+                indexes = np.arange(N)
+                np.random.shuffle(indexes)
                 lim = int(ratio_imgs_per_layer * N)
                 indexes = indexes[:lim]
+            elif checks[2]:
+                indexes = np.arange(N)[:first_n_imgs]
             self.compute_layer_viz(int(lay_info['id']),indexes)
         self.set_state(State.idle)
 
@@ -725,7 +733,7 @@ class Lurk():
         self.p = multiprocessing.Process(target = app_start,args=(port,))
         self.p.start()
     def end_serve(self):
-        if p is None:
+        if self.p is None:
             raise NameError("No server running")
         self.p.terminate()
         self.p.join()
