@@ -725,6 +725,8 @@ class Lurk():
         self.p = multiprocessing.Process(target = app_start,args=(port,))
         self.p.start()
     def end_serve(self):
+        if p is None:
+            raise NameError("No server running")
         self.p.terminate()
         self.p.join()
         self.p = None
