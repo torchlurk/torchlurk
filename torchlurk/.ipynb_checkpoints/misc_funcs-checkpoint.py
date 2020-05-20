@@ -5,6 +5,9 @@ import os
 import pandas as pd
 from torchvision.utils import save_image
 from PIL import Image
+
+import PIL
+import os
 from torchvision import transforms
 from IPython.display import clear_output
 from shutil import copyfile
@@ -120,6 +123,23 @@ def sample_imagefolder(src_path_imgs,trgt_pathname_imgs,num_dir=None,img_num_per
             copyfile(os.path.join(subfold_src_path,file),os.path.join(subfold_trget_path,file))
     print("Sampling terminated.")
 
+    
+def check_imgs_integrity(path_to_imgs_dirs):
+    removed = []
+    num_dir = len([i for i in os.listdir(path_to_imgs_dirs) if os.path.isdir(os.path.join(path_to_imgs_dirs,i))])
+    for i,(root, dirs, files) in enumerate(os.walk(path_to_imgs_dirs,topdown=False)):
+        clear_output(wait=True)
+        print("Progression:{:.2f}%".format(i/num_dir*100))
+        for name in files:
+            path = str(Path(root).joinpath(name))
+            try:
+                Image.open(path)
+            except PIL.UnidentifiedImageError:
+                removed.append(path)
+                os.remove(str(path))
+    print("Removed images:")
+    print(removed)
+    
 def plot_hist(obj):
     """
     plot the histogram of a filter

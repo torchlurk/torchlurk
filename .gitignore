@@ -5,6 +5,7 @@ results/*
 torchlurk/models/*
 # exception to the rule
 !bigdata/.gitkeep 
+!bigdata/labels_imagenet.txt
 !results/.gitkeep 
 !data/numb.png
 documentation/

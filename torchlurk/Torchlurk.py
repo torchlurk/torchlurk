@@ -80,13 +80,14 @@ class Lurk():
         """
         ##################### TODO: get rid of dev#####################
         # allow to run reduced computations
-        self.DEVELOPMENT = True
+        self.DEVELOPMENT = False
         #number of layers we compute stuff for in development mode
         self.N_LAYERS_DEV = 1
         #number of filters we compute stuff for in development mode
         self.N_FILTERS_DEV = 1
         ###############################################################
-        
+        print("DEV")if self.DEVELOPMENT else print("OKOK")
+
         #model to compute a lurker for
         self.model = model
         #preprocessing used when training the model
@@ -644,7 +645,6 @@ class Lurk():
             gradient /= gradient.max()
             im = ToPILImage()(gradient[0])
             im.save(grad_path)
-            set_trace()
             filt[grad_strindx][i] = grad_path
             
     ################################ Plotting ################################
