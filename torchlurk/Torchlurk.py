@@ -53,7 +53,7 @@ class State(Enum):
 class Lurk():
     def __init__(self,model,preprocess,
                  save_gen_imgs_dir,save_json_path,imgs_src_dir,
-                 n_top_avg=3,n_top_max=3,load_json_path=None,side_size=224):
+                 n_top_avg=3,n_top_max=3,load_json_path=None,side_size=224,TITLE2CLASS=None):
         """
         Lurker class: one lurker can be instanciated per trained pytorch network. Several methods allow to generate various types of data
         concerning the network and can be visualized thanks to the bash command TOCOMPLETE
