@@ -114,6 +114,7 @@ class Lurk():
         self.dataset = ImageFolderWithPaths(self.IMGS_DIR,transform=self.preprocess)
         self.data_loader = torch.utils.data.DataLoader(self.dataset, batch_size=1, shuffle=True)
         # each class has 3 kinds of representation: (1)class titles (ex: "penguin") (2) dirname (ex:"n02018795") (3) label (ex:724)
+        self.TITLE2CLASS = TITLE2CLASS
         self.CLASS2LAB = self.dataset.class_to_idx
         self.LAB2CLASS = {i:j for j,i in self.CLASS2LAB.items()}
         
@@ -581,7 +582,7 @@ class Lurk():
         
     ################################ Gradients ################################
 
-    def compute_grads(self,verbose = False,compute_avg = True,compute_max = True):
+    def compute_grads(self,verbose = False,compute_avg = True,compute_max = True,first_n_imgs=None):
         """
         compute the gradients for the fav images of all filters of all layers for the model_info
         Args:
@@ -600,7 +601,10 @@ class Lurk():
                     if (j >=self.N_FILTERS_DEV):
                         break
                 else:
-                    print("Grads Progression:layer{}/{} {}%".format(i+1,len(self.model_info),j/len(lay_info['filters'])*100))
+                    if (first_n_imgs is not None):
+                        print("Grads Progression:layer{}/{} {}%".format(i+1,len(self.conv_layinfos),j/len(conv_layinfos)*100))
+                        if (j > first_n_imgs):
+                            break
                 if compute_avg:
                     path = self.__get_filt_dir("avg_act_grad",lay_info['name'],filt["id"])
                     self.__compute_grads_filt(gbp,filt,path,lay_info['id'],"avg_imgs")
@@ -608,6 +612,7 @@ class Lurk():
                     path = self.__get_filt_dir("max_act_grad",lay_info['name'],filt["id"])
                     self.__compute_grads_filt(gbp,filt,path,lay_info['id'],"max_imgs")
                     self.__save_cropped(grad= True)
+                self.save_to_json()
         self.set_state(State.idle)
 
     def __compute_grads_filt(self,gbp,filt,path,lay_id,img_type):
@@ -622,7 +627,7 @@ class Lurk():
         grad_strindx = "avg_imgs_grad" if img_type == "avg_imgs" else "max_imgs_grad"
 
         for i,img_path in enumerate(filt[img_type]):
-            if (img_path == self.NUMB_PATH):
+            if (img_path == self.NUMB_PATH or Path(img_path).stem == "numb"):
                 continue   
 
             #name of the image
@@ -638,14 +643,15 @@ class Lurk():
             image = self.preprocess(image).unsqueeze(0)
             image.requires_grad = True
             img_path = Path(img_path)
-            class_name = img_path.parent.stem
+
+            class_name = self.TITLE2CLASS[img_path.name.split("_")[0]]
             gradient = gbp.generate_gradients(image,self.CLASS2LAB[class_name],lay_id,filt['id'])
             #normalization of the gradient
             gradient = gradient - gradient.min()
             gradient /= gradient.max()
             im = ToPILImage()(gradient[0])
             im.save(grad_path)
-            filt[grad_strindx][i] = grad_path
+            filt[grad_strindx][i] = str(grad_path)
             
     ################################ Plotting ################################
     def __repr__(self):
