@@ -337,7 +337,6 @@ class Lurk():
             save_loc (bool): save the images to the GEN_IMGS_DIR from the SRC_DIR (training set) upon completion of the function call
         """
         self.__set_state(State.compute_top)
-        t_start = perf_counter()  
         assert(compute_max or compute_avg)
         self.__reset_histos()
         for j,(datas,labels,paths) in enumerate(self.data_loader):
@@ -369,9 +368,8 @@ class Lurk():
                 if compute_avg:
                     self.__update_filters_avg_imgs(lay_info,avg_spikes,paths,labels)
                 #save the whole model
-                t_now = perf_counter()
-                if (t_now - t_start > 5):
-                    t_start = t_now
+                if (j > 200 and self.server is not None):
+                    #save the information for live udpate
                     self.save_to_json()
 
         self.__normalize_histos()
@@ -572,7 +570,7 @@ class Lurk():
             The lurker will first check if any file exists at its write locations for the filter visualisations/ gradients. If this is the case, it will update its json path accordingly, but won't compute any new images for computational reasons. Please remove any existing images you wish to re-compute filter visualisations/ gradients for.
         """
         self.__set_state(State.compute_activ)
-        lay_info = self.model_info[layer_indx]
+        lay_info = self.conv_layinfos[layer_indx]
         if filter_indexes is None:
             filter_indexes = range(lay_info["lay"].out_channels)
         else:
@@ -593,7 +591,8 @@ class Lurk():
             except FileNotFoundError:
                 pass
 
-        filter_indexes = [i for i in filter_indexes if i not in pre_existing]
+        filter_indexes = [i for i in filter_indexes if not i in pre_existing]
+        print("Effectively computing the filters:"filter_indexes)
 
         for j,filt_indx in enumerate(filter_indexes):
             print("Filter {} / {}".format(j+1,len(filter_indexes)))
@@ -613,7 +612,6 @@ class Lurk():
             self.save_to_json()
         print("Visualization done!")
         self.__set_state(State.idle)
-        self.save_to_json()
 
 
         
@@ -754,10 +752,11 @@ class Lurk():
         assert(isinstance(lay_info['lay'],nn.Conv2d))
         filt = lay_info['filters'][filt_indx]
         obj = filt['histo_counts_max'] if hist_type == "max" else filt['histo_counts_avg']
-        fig,ax = plt.subplots(1,1,figsize=(10,20))
+        fig,ax = plt.subplots(1,1,figsize=(20,3))
         keys = [i for i in list(obj.keys())[::-1]][:num_classes]
-        values = [i for i in list(obj.values())[::-1]][:num_classes]
-        ax.barh(keys,values)
+        values = [i for i in list(obj.values())][:num_classes]
+        ax.xaxis.set_tick_params(rotation=45)
+        ax.bar(keys,values,color="#ee4c2c")
 
     def plot_filter_viz(self,layer_indx,filt_indx):
         """
@@ -770,6 +769,8 @@ class Lurk():
         filt = self.conv_layinfos[layer_indx]['filters'][filt_indx]
         im = Image.open(filt["filter_viz"])
         plt.imshow(np.asarray(im))
+        plt.axis('off')
+        plt.savefig("filt_viz.png")
         
 
     def plot_top(self,kind,layer_indx,filt_indx,plot_imgs=True,plot_grad=False):
@@ -824,8 +825,9 @@ class Lurk():
         filt = self.conv_layinfos[layer_indx]['filters'][filt_indx]
         imgs = filt[key]
         crop_imgs = filt[key_crop]
-        fig,axes = plt.subplots(2,len(imgs),figsize=(10,10))
+        fig,axes = plt.subplots(2,len(imgs),figsize=(20,4.5))
         for i,(ax,img) in enumerate(zip(axes.flatten(),imgs+crop_imgs)):
+            ax.axis('off')
             im_pil = Image.open(img)
             ax.imshow(np.asarray(im_pil))
             
@@ -837,15 +839,15 @@ class Lurk():
         Args:
             port (int): the port to serve the application on
         """
-        self.p = multiprocessing.Process(target = app_start,args=(port,))
-        self.p.start()
+        self.server = multiprocessing.Process(target = app_start,args=(port,))
+        self.server.start()
         
     def end_serve(self):
         """
         end the served application
         """
-        if self.p is None:
+        if self.server is None:
             raise NameError("No server running")
-        self.p.terminate()
-        self.p.join()
-        self.p = None
+        self.server.terminate()
+        self.server.join()
+        self.server = None

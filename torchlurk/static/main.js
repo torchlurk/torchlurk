@@ -102,7 +102,7 @@ $.getJSON(json_path,function(json_state) {
 });// end of get Json for swiper 
 
 //fresh_json();
-//setInterval(fresh_json,8000);
+setInterval(fresh_json,8000);
 
 function fresh_json(){$.getJSON(json_path,
   function(json_state) {
@@ -121,6 +121,11 @@ function fresh_json(){$.getJSON(json_path,
     }
     $('#indicator').html("<p>"+state+"</p>");
     jsonData = json_state.infos
+    for(layer of jsonData){
+      if(layer.filters != undefined){ // condition for RELU layers
+        drawGridContainer(parseInt(layer.id));
+      }
+    }
     console.log("end refresh");
   })
 };

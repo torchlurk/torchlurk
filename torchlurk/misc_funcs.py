@@ -15,6 +15,24 @@ from IPython.core.debugger import set_trace
 import sys
 import shutil
 
+def cut_json(path):
+    path = Path(path)
+    with open(path, 'r') as fin:
+        k = json.load(fin)
+    N = len(k['infos'])
+    k1 = {'state':k['state'],
+          'infos':{}}
+    k1 = {'state':k['state'],
+          'infos':{}}
+    k1['infos'] = [val for i,val in enumerate(k['infos']) if i <= N // 1.5]
+    k2['infos'] = [val for i,val in enumerate(k['infos']) if i > N // 1.5]
+    path1 = path.parent.joinpath(path.stem + "_1").with_suffix(".json")
+    path2 = path.parent.joinpath(path.stem + "_2").with_suffix(".json")
+    with open(path1, 'w') as f:
+            json.dump(k1, f, indent = 2)
+    with open(path2, 'w') as f:
+            json.dump(k2, f, indent = 2)
+    print("Cut done!")
 
 
 def rename_directories(dir_path,dic):
