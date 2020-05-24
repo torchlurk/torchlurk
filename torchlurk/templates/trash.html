@@ -1,0 +1,224 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/css/swiper.min.css">
+    <link rel="stylesheet" href="mainJ.css">
+    <style>
+        .layer-description{
+    background-color: silver ;
+}
+    .layer-name{
+        color: black;
+    background-color: silver ;
+    
+    }
+        .swiper-container{
+    width: 80%; /* en %  pour le rapprocher du centre
+    les margin sont en auto par min.css...*/
+    height: 250; /* en px */
+    /*overflow: auto !important;*/
+    
+    
+}
+        .swiper-slide{
+        background-image: url(../data/numb.png);
+        height: 180px;/* en px */
+        width: 180px;/*en px pour etre carré :) */
+        
+        margin-top: 0px; /* rapproche les slides de la scroll
+        === eloigne du titre... */
+    }
+    .swiper-scrollbar-drag{
+        background:  rgb(71,69,69);
+;
+    }
+    .swiper-pagination{
+        padding-bottom: 10px;
+    }
+       
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <main>
+        
+        <h1 class="julien titel-page"> Explore the Layers </h1>
+        
+        <div class="row">
+        
+        
+        
+            <div class=" firstColumn column">
+            <!-- first colomn with the swiper -->
+            <!---------------------------------->
+                <div class="julien swiper-container">
+                    <!-- Additional required wrapper -->
+                    <div class="julien swiper-wrapper"></div><!-- Slides to be appended -->
+                    <!-- If we need pagination -->
+                    <div class="julien swiper-pagination"></div>
+                    <!-- If we need navigation buttons -->
+                    <!-- <div class="julien swiper-button-prev"></div> -->
+                    <!-- <div class="julien swiper-button-next"></div> -->
+                    <!-- If we need scrollbar -->
+                    <div class="julien swiper-scrollbar"></div>
+                </div>
+            </div>   
+        
+
+
+        
+            <div class=" secondColumn column">
+            <!-- second colomn with the swiper -->
+            <!---------------------------------->
+                <!-- addition du main_wrapper == filtersPage :)-->
+                <div class="julien main_wrapper">
+                    <h1 class="julien titel-filter "></h1>
+                
+                    <div class="julien grid-wrapper">
+                        <div class="julien grid-container"></div>
+                    </div>
+                
+                    <div class="julien modal-container">
+                        <div class="julien modal-header">
+                                    <a href="#avg_imgs-display">avg_imgs-display</a>
+                                    <a href="#max_imgs-display">max_imgs-display</a>
+                                    <a href="#actmax_img-display">actmax_img-display</a>
+                                    <div class="julien close-div" style="padding-right:0;">&times;</div>
+                        </div>
+                        <!-- la popu up doit être codée dans le modal-body
+                        see w3school chaque bouton et relié à un displayContent-->
+                        <div class="julien modal-body">
+                            <div class="julien content-wrapper">
+                                <div class="julien displayContent" id = "avg_imgs-display" > 
+                                    <h3 class="julien displayTitel"> histo_counts_avg </h3>
+                                    <p class="julien histo_counts_avg-description description"></p>
+                                    <div class="julien favCatHistogram histo"></div>
+                                    
+                                    <h3 class="julien displayTitel"> avg_imgs </h3>
+                                    <p class="julien avg_imgs-description description"></p>
+                                    <div class="julien avg_imgs images"></div>
+                                
+                                    <h3 class="julien displayTitel"> avg_imgs_grad </h3>
+                                    <p class="julien avg_imgs_grad-description description"></p>
+                                    <div class="julien avg_imgs_grad images"></div>
+                                    
+                                    <h3 class="julien displayTitel"> favHisto </h3>
+                                    <p class="julien avg_imgs_histo-description description">
+                                    </p>
+                                    <div class="julien favHistogram histo"></div>
+
+                                </div>
+                
+                                <div class="julien displayContent " id ="max_imgs-display" >
+                                    <h3 class="julien displayTitel"> histo_counts_max </h3>
+                                    <p class="julien histo_counts_max-description description"></p>
+                                    <div class="julien maxCatHistogram histo"></div>
+
+                                    <h3 class="julien displayTitel"> max_imgs </h3>
+                                    <p class="julien max_imgs-description description"></p>
+                                    <div class="julien max_imgs images"></div>
+
+                                    <h3 class="julien displayTitel"> max_imgs_crop</h3>
+                                    <p class="julien max_imgs_crop-description description"></p>
+                                    <div class="julien max_imgs_crop images"></div>
+
+                                    <h3 class="julien displayTitel"> max_imgs_grad </h3>
+                                    <p class="julien max_imgs_grad-description description"></p>
+                                    <div class="julien max_imgs_grad images"></div>
+
+                                    <h3 class="julien displayTitel"> max_imgs_crop_grad </h3>
+                                    <p class="julien max_imgs_crop_grad-description description"></p>
+                                    <div class="julien max_imgs_crop_grad images"></div>
+
+                                    <h3 class="julien displayTitel"> maxHisto </h3>
+                                    <p class="julien max_imgs_histo-description description"></p>
+                                    <div class="julien maxHistogram histo"></div>
+                                </div>
+
+                                <div class="julien displayContent " id ="actmax_img-display" >
+                                    <h3 class="julien displayTitel"> actmax_img </h3>
+                                    <p class="julien actmax_img-description description">
+                                    </p>
+                                    <div class="julien actmax_img images"></div>
+                                </div>
+                            </div><!-- end of content-wraper--> 
+                        </div> <!-- end of modal body-->
+                    </div> <!-- end of modal container-->
+                    <!--  overlay au niveau du modal-container-->
+                    <div class="julien overlay "></div> 
+                
+                </div> <!-- end of main_wrapper == filtersPage :)-->
+            </div>  <!-- end of secon column-->
+        
+
+        </div> <!-- end of row-->
+
+
+
+
+        
+    </main>
+    <script src="https://unpkg.com/swiper/js/swiper.js"></script>
+    <script src="https://unpkg.com/swiper/js/swiper.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="mainJ.js"></script>
+    <script>
+            ///////////////////////////////////////
+            /////1step: instantiate mySwiper//////////
+            /////to append slides later//////////
+
+            
+            var mySwiper = new Swiper ('.swiper-container', {
+                // Optional parameters
+                direction: 'horizontal',
+                effect: "coverflow",
+                centeredSlides: true,
+                slidesPerView: 'auto', // important for coverflow !
+                coverflowEffect:{
+                    rotate:30,
+                    slideShadows: true,
+                    depth: 100,
+                    stretch: 0,
+                    },
+                grabCursor: true,
+                loop: false,// WARNING data-swiper-slide-index doesn't exist if false...
+                //freeMode: true,
+                //freeModeMomentumRatio: 2,
+                //freeModeSticky: true,
+                watchSlidesProgress: true,
+                //on: event :) 
+                // If we need pagination
+                pagination: {
+                el: '.swiper-pagination',
+                type: "fraction",
+                formatFractionCurrent: number => number-1,
+                formatFractionTotal: number => number-1	
+                },
+                // Navigation arrows
+                //navigation: {
+                //  nextEl: '.swiper-button-next',
+                // prevEl: '.swiper-button-prev',
+                //},
+                // And if we need scrollbar
+                scrollbar: {
+                el: '.swiper-scrollbar',
+                draggable: true,
+                },
+
+            }); // end of mySwiper
+        /////////////////////////////////////////////
+        /////////////append slides to mySwiper and update the whole///////////////
+        //  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"> //
+        
+    </script>  
+
+
+
+
+    
+    
+</body>
+</html>

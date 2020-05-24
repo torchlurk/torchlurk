@@ -1,0 +1,501 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Welcome to torchlurk’s documentation! &#8212; torchlurk 1.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Torchlurk">
+<span id="welcome-to-torchlurk-s-documentation"></span><h1>Welcome to torchlurk’s documentation!<a class="headerlink" href="#module-Torchlurk" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="Torchlurk.Lurk">
+<em class="property">class </em><code class="descclassname">Torchlurk.</code><code class="descname">Lurk</code><span class="sig-paren">(</span><em>model</em>, <em>preprocess</em>, <em>save_gen_imgs_dir</em>, <em>save_json_path</em>, <em>imgs_src_dir</em>, <em>n_top_avg=3</em>, <em>n_top_max=3</em>, <em>load_json_path=None</em>, <em>side_size=224</em>, <em>title2class=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lurker class: one lurker can be instanciated per trained pytorch network. Several methods allow to generate various types of data concerning the network and can be visualized thanks to the bash command TOCOMPLETE</p>
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.model">
+<code class="descname">model</code><a class="headerlink" href="#Torchlurk.Lurk.model" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>torch module</em> – model to compute a lurker for</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.preprocess">
+<code class="descname">preprocess</code><a class="headerlink" href="#Torchlurk.Lurk.preprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>nn.Sequential</em> – preprocessing used when training the model</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.state">
+<code class="descname">state</code><a class="headerlink" href="#Torchlurk.Lurk.state" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>State</em> – state for live update</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.GEN_IMGS_DIR">
+<code class="descname">GEN_IMGS_DIR</code><a class="headerlink" href="#Torchlurk.Lurk.GEN_IMGS_DIR" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – directory where to save the generated images. The lurker will create various subdirectories in it.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.IMGS_DIR">
+<code class="descname">IMGS_DIR</code><a class="headerlink" href="#Torchlurk.Lurk.IMGS_DIR" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – directory where to load the training images</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.JSON_PATH_WRITE">
+<code class="descname">JSON_PATH_WRITE</code><a class="headerlink" href="#Torchlurk.Lurk.JSON_PATH_WRITE" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – directory where to save the json</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.NUMB_PATH">
+<code class="descname">NUMB_PATH</code><a class="headerlink" href="#Torchlurk.Lurk.NUMB_PATH" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> – path to a numb image</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.N_TOP_AVG">
+<code class="descname">N_TOP_AVG</code><a class="headerlink" href="#Torchlurk.Lurk.N_TOP_AVG" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – number of avg spikes images per filter</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.N_TOP_MAX">
+<code class="descname">N_TOP_MAX</code><a class="headerlink" href="#Torchlurk.Lurk.N_TOP_MAX" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – number of max spikes images per filter</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.side_size">
+<code class="descname">side_size</code><a class="headerlink" href="#Torchlurk.Lurk.side_size" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> – size in pixel of a typical training sample</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.dataset">
+<code class="descname">dataset</code><a class="headerlink" href="#Torchlurk.Lurk.dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>torch.dataset</em> – dataset constructed to compute the top images</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.ImageFolderWithPaths">
+<code class="descname">ImageFolderWithPaths</code><a class="headerlink" href="#Torchlurk.Lurk.ImageFolderWithPaths" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>torch.imagefolder</em> – imageloader constructed to compute the top images</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.CLASS2LAB">
+<code class="descname">CLASS2LAB</code><a class="headerlink" href="#Torchlurk.Lurk.CLASS2LAB" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dic</em> – convert the class (ex:”rabbit”) to its label (ex:256)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.LAB2CLASS">
+<code class="descname">LAB2CLASS</code><a class="headerlink" href="#Torchlurk.Lurk.LAB2CLASS" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dic</em> – inverse of CLASS2LAB</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.TITLE2CLASS">
+<code class="descname">TITLE2CLASS</code><a class="headerlink" href="#Torchlurk.Lurk.TITLE2CLASS" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>dic</em> – converts the title found in the filename (“n01243532”) to the class name (“rabbit”)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Torchlurk.Lurk.title_counts">
+<code class="descname">title_counts</code><a class="headerlink" href="#Torchlurk.Lurk.title_counts" title="Permalink to this definition">¶</a></dt>
+<dd><p>keeps track of the filters affinity for the classes in terms of avg/max activations.</p>
+</dd></dl>
+
+<p><strong>Constructor</strong>:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>model</strong> (<em>torch module</em>) – model to compute a lurker for            the trained model</li>
+<li><strong>preprocess</strong> (<em>nn.Sequential</em>) – preprocessing used when training the model</li>
+<li><strong>save_gen_imgs_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – directory where to save the generated images. The lurker will create various subdirectories in it.</li>
+<li><strong>save_json_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – directory where to save the json</li>
+<li><strong>imgs_src_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – directory where to load the training images</li>
+<li><strong>n_top_avg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number of avg spikes images per filter</li>
+<li><strong>n_top_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number of max spikes images per filter</li>
+<li><strong>load_json_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – path to a previously computed json file: NB the other arguments need to be similar as during this first run. If set to a value,</li>
+<li><strong>lurker will load the previously computed informations</strong><strong>, </strong><strong>if set to None</strong><strong>, </strong><strong>will start a new lurker from scratch</strong> (<em>the</em>) – </li>
+<li><strong>title2class</strong> (<em>dic</em>) – converts the title found in the filename (“n01243532”) to the class name (“rabbit”)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="Torchlurk.Lurk.compute_grads">
+<code class="descname">compute_grads</code><span class="sig-paren">(</span><em>compute_avg=True</em>, <em>compute_max=True</em>, <em>first_n_imgs=None</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.compute_grads" title="Permalink to this definition">¶</a></dt>
+<dd><p>compute the gradients for the fav images of all filters of all layers for the model_info</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>model_info</strong> (<em>dic</em>) – as described above</li>
+<li><strong>origin_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – path where to store the folders containing the gradient images</li>
+<li><strong>compute_avg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – whether to compute the gradient for the top average</li>
+<li><strong>compute_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – whether to compute the gradient for the top max</li>
+<li><strong>first_n_imgs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – if initialized, compute only the gradient for the first first_n_imgs filters of <strong>each layer</strong></li>
+<li><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – displays progression info</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The lurker will first check if any file exists at its write locations for the filter visualisations/ gradients. If this is the case, it will update its json path accordingly, but won’t compute any new images for computational reasons. Please remove any existing images you wish to re-compute filter visualisations/ gradients for.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.compute_grads_layer">
+<code class="descname">compute_grads_layer</code><span class="sig-paren">(</span><em>lay_indx</em>, <em>compute_avg=True</em>, <em>compute_max=True</em>, <em>first_n_imgs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.compute_grads_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>compute the gradients for the top avg and/or max images of the layer corresponding to lay_indx.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layer_indx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – index of the layer</li>
+<li><strong>compute_avg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – whether to compute the gradient for the top average</li>
+<li><strong>compute_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – whether to compute the gradient for the top max</li>
+<li><strong>first_n_imgs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – if initialized, compute only the gradient for the first first_n_imgs filters of the layer</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The lurker will first check if any file exists at its write locations for the filter visualisations/ gradients. If this is the case, it will update its json path accordingly, but won’t compute any new images for computational reasons. Please remove any existing images you wish to re-compute filter visualisations/ gradients for.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.compute_layer_viz">
+<code class="descname">compute_layer_viz</code><span class="sig-paren">(</span><em>layer_indx</em>, <em>filter_indexes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.compute_layer_viz" title="Permalink to this definition">¶</a></dt>
+<dd><p>compute  and save the filter visualisation as an image. Compute it only for filters for which
+it has not been computed yet: <strong>you need to delete the existing images manually if you wish for a refresh</strong>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layer_indx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – layer to compute the filter for</li>
+<li><strong>filter_indexes</strong> (<em>list of int</em>) – indexes of filters to compute the visualizations for. By default, compute it for each filter.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The lurker will first check if any file exists at its write locations for the filter visualisations/ gradients. If this is the case, it will update its json path accordingly, but won’t compute any new images for computational reasons. Please remove any existing images you wish to re-compute filter visualisations/ gradients for.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.compute_top_imgs">
+<code class="descname">compute_top_imgs</code><span class="sig-paren">(</span><em>verbose=False</em>, <em>compute_max=True</em>, <em>compute_avg=True</em>, <em>save_loc=True</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.compute_top_imgs" title="Permalink to this definition">¶</a></dt>
+<dd><p>compute the average and max images for all the layers of the model_info such that each filter of each layer knows what are
+its favourite images (write down the link to the avg/max images in the json)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>compute_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – whether to compute the top maximum activation images</li>
+<li><strong>compute_avg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – whether to compute the top average activation images</li>
+<li><strong>save_loc</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – save the images to the GEN_IMGS_DIR from the SRC_DIR (training set) upon completion of the function call</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.compute_viz">
+<code class="descname">compute_viz</code><span class="sig-paren">(</span><em>num_imgs_per_layer=None</em>, <em>ratio_imgs_per_layer=None</em>, <em>first_n_imgs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.compute_viz" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the filter visualization for all layers <strong>only one of num_imgs_per_layer,ratio_imgs_per_layer or first_n_imgs can be have a value assigned.</strong> By default, compute the visualisation for all filters of all layers (can be computationally demanding)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>num_imgs_per_layer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – number of filters to compute the visualization for for each class</li>
+<li><strong>ratio_imgs_per_layer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – ratio of filters to compute the visualization for for each class</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The lurker will first check if any file exists at its write locations for the filter visualisations/ gradients. If this is the case, it will update its json path accordingly, but won’t compute any new images for computational reasons. Please remove any existing images you wish to re-compute filter visualisations/ gradients for.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.end_serve">
+<code class="descname">end_serve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.end_serve" title="Permalink to this definition">¶</a></dt>
+<dd><p>end the served application</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="Torchlurk.Lurk.load_from_dill">
+<em class="property">static </em><code class="descname">load_from_dill</code><span class="sig-paren">(</span><em>load_path</em>, <em>overwrite=False</em>, <em>alternate_json_path=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.load_from_dill" title="Permalink to this definition">¶</a></dt>
+<dd><p>load the lurker from a dill (pickle-like) file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>load_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – path to the dill file</li>
+<li><strong>overwrite</strong> (<em>Bool</em>) – whether to overwrite the JSON the lurker reads from</li>
+<li><strong>alternate_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – specific path to write the next json. By default, adds a “_copy” extension to the json path set in the pickled instance. Can have a value assigned only if overwrite is set to False.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.load_from_json">
+<code class="descname">load_from_json</code><span class="sig-paren">(</span><em>load_path</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.load_from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads a lurker from a previously computed json. <strong>Watch out: any computation made after loading will overwrite the json file passed in parameter. Please backup the file if you don’t wish for any modification.</strong></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>load_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – path to the json to load a lurker from</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.plot_crop">
+<code class="descname">plot_crop</code><span class="sig-paren">(</span><em>layer_indx</em>, <em>filt_indx</em>, <em>grad=False</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.plot_crop" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot the top max images along with the cropped version which leads to the highest activating output for the given filter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layer_indx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – index of the layer</li>
+<li><strong>filt_indx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – index of the filter</li>
+<li><strong>grad</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – whether to plot grad or the original image</li>
+<li><strong>grad</strong> – whether to plot the grad equivalent</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.plot_filter_viz">
+<code class="descname">plot_filter_viz</code><span class="sig-paren">(</span><em>layer_indx</em>, <em>filt_indx</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.plot_filter_viz" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot the filter visualization for the corresponding layer/filter combination</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layer_indx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – index of the layer</li>
+<li><strong>filt_indx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – index of the filter</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.plot_hist">
+<code class="descname">plot_hist</code><span class="sig-paren">(</span><em>layer_indx</em>, <em>filt_indx</em>, <em>hist_type='max'</em>, <em>num_classes=30</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.plot_hist" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot the sorted average values of avg/max spikes over the dataset for each class as an histogram</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layer_indx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – index of the layer</li>
+<li><strong>filt_indx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – index of the filter</li>
+<li><strong>hist_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – either “max” or “avg”: which hist to plot</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.plot_top">
+<code class="descname">plot_top</code><span class="sig-paren">(</span><em>kind</em>, <em>layer_indx</em>, <em>filt_indx</em>, <em>plot_imgs=True</em>, <em>plot_grad=False</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.plot_top" title="Permalink to this definition">¶</a></dt>
+<dd><p>plot the top activation samples of the train set for a given filter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – either “avg” or “max”</li>
+<li><strong>layer_indx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – index of the layer</li>
+<li><strong>filt_indx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – index of the filter</li>
+<li><strong>plot_imgs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – True to plot the images</li>
+<li><strong>plot_grad</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – True to plot the gradients</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Either one of plot_imgs or plot_grad must be set to True.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.save_avgmax_imgs">
+<code class="descname">save_avgmax_imgs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.save_avgmax_imgs" title="Permalink to this definition">¶</a></dt>
+<dd><p>save the top average/maximum activation images figuring in the json to the GEN_IMGS_DIR directory. This allows the lurker to become independant of the training set for subsequent visualization/computations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.save_to_dill">
+<code class="descname">save_to_dill</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.save_to_dill" title="Permalink to this definition">¶</a></dt>
+<dd><p>save to dill format: similar to pickle format,but handle additional data formats</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.save_to_json">
+<code class="descname">save_to_json</code><span class="sig-paren">(</span><em>alternate_json_path=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.save_to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the json information.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>alternate_json_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Alternate path to save the json. By default, the lurker will save to JSON_PATH_WRITE.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Torchlurk.Lurk.serve">
+<code class="descname">serve</code><span class="sig-paren">(</span><em>port=5000</em><span class="sig-paren">)</span><a class="headerlink" href="#Torchlurk.Lurk.serve" title="Permalink to this definition">¶</a></dt>
+<dd><p>serves the application on a localport</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – the port to serve the application on</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="Torchlurk.State">
+<em class="property">class </em><code class="descclassname">Torchlurk.</code><code class="descname">State</code><a class="headerlink" href="#Torchlurk.State" title="Permalink to this definition">¶</a></dt>
+<dd><p>An enumeration.</p>
+</dd></dl>
+
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Yann Mentha, Gianni Giusto and Julien Berger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -13,6 +13,7 @@ from IPython.display import clear_output
 from shutil import copyfile
 from IPython.core.debugger import set_trace
 import sys
+import shutil
 
 
 
@@ -22,9 +23,18 @@ def rename_directories(dir_path,dic):
         print("Already renamed!")
         return
     else:
-        assert(all([p.name in dic.keys() for p in Path(dir_path).iterdir() if p.is_dir()]))
+        pass
+        #assert(all([p.name in dic.keys() for p in Path(dir_path).iterdir() if p.is_dir()]))
     for p in Path(dir_path).iterdir():
-        p.rename(p.parent.joinpath(dic[p.name]))
+        if (p.name in dic.keys()):
+            name_path = p.parent.joinpath(dic[p.name])
+            if (name_path.exists()):
+                #for f in p.iterdir():
+                #    shutil.move(str(f), str(name_path))
+                #p.rmdir()
+                shutil.rmtree(p)
+            else:
+                p.rename(name_path)
     print("Renaming successful!")
 def create_folders(path,direc_types,model_info):
     """

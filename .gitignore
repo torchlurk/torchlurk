@@ -3,6 +3,7 @@ bigdata/*
 data/*
 results/*
 torchlurk/models/*
+saved_model/*
 # exception to the rule
 !bigdata/.gitkeep 
 !bigdata/labels_imagenet.txt

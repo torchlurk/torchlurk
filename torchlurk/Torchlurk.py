@@ -30,14 +30,11 @@ import multiprocessing
 
 
 import dill
-
 from .ImageFolderWithPaths import ImageFolderWithPaths
 from .Projector import Projector
 
-#local files
 from .app import start as app_start
 from .misc_funcs import create_folders
-
 #libraries
 from .lib.pytorch_cnn_visualizations.cnn_layer_visualization import CNNLayerVisualization
 from .lib.pytorch_cnn_visualizations.layer_activation_with_guided_backprop import GuidedBackprop
@@ -51,33 +48,49 @@ class State(Enum):
 
 
 class Lurk():
+    """
+    Lurker class: one lurker can be instanciated per trained pytorch network. Several methods allow to generate various types of data concerning the network and can be visualized thanks to the bash command TOCOMPLETE
+
+    Attributes:
+        model (torch module): model to compute a lurker for
+        preprocess (nn.Sequential): preprocessing used when training the model
+        state (State): state for live update
+        GEN_IMGS_DIR (str): directory where to save the generated images. The lurker will create various subdirectories in it.
+        IMGS_DIR (str): directory where to load the training images
+        JSON_PATH_WRITE (str): directory where to save the json
+        NUMB_PATH (str): path to a numb image
+
+        N_TOP_AVG (int): number of avg spikes images per filter
+        N_TOP_MAX (int): number of max spikes images per filter
+        side_size (int): size in pixel of a typical training sample
+
+        dataset (torch.dataset): dataset constructed to compute the top images
+        ImageFolderWithPaths (torch.imagefolder): imageloader constructed to compute the top images
+        CLASS2LAB (dic): convert the class (ex:"rabbit") to its label (ex:256)
+        LAB2CLASS (dic): inverse of CLASS2LAB
+        TITLE2CLASS (dic): converts the title found in the filename ("n01243532") to the class name ("rabbit")
+        title_counts: keeps track of the filters affinity for the classes in terms of avg/max activations.
+    """
     def __init__(self,model,preprocess,
                  save_gen_imgs_dir,save_json_path,imgs_src_dir,
-                 n_top_avg=3,n_top_max=3,load_json_path=None,side_size=224,TITLE2CLASS=None):
+                 n_top_avg=3,n_top_max=3,load_json_path=None,side_size=224,title2class=None):
         """
-        Lurker class: one lurker can be instanciated per trained pytorch network. Several methods allow to generate various types of data
-        concerning the network and can be visualized thanks to the bash command TOCOMPLETE
-        Parameters
-        ----------
-        model : torch.model
-            the trained model
-        preprocess : torchvision.transforms.transforms.Compose
-            the preprocessing used when training the model
-        save_gen_imgs_dir : str
-            directory where to save the generated images: some subdirectories will be created inside
-        save_json_path : string
-            path to the json object to create which will stock information for subsequent visualization. Must have an ".json" extension
-        imgs_src_dir : string
-            directory to the train set of the model
-        n_top_avg : int
-            how many average images to keep in the top average filter activations
-        n_top_max : int
-            how many average images to keep in the top maximum filter activations
-        load_json_path : string
-            path to a previously computed json file: NB the other arguments need to be similar as during this first run. If set to a value,
+        **Constructor**:
+        
+        Args:
+            model (torch module): model to compute a lurker for            the trained model
+            preprocess (nn.Sequential): preprocessing used when training the model
+            save_gen_imgs_dir (str): directory where to save the generated images. The lurker will create various subdirectories in it.
+            save_json_path (str): directory where to save the json
+            imgs_src_dir (str): directory where to load the training images
+            n_top_avg (int): number of avg spikes images per filter
+            n_top_max (int): number of max spikes images per filter
+            load_json_path (str): path to a previously computed json file: NB the other arguments need to be similar as during this first run. If set to a value,
             the lurker will load the previously computed informations, if set to None, will start a new lurker from scratch
             
+            title2class (dic): converts the title found in the filename ("n01243532") to the class name ("rabbit")
         """
+        
         ##################### TODO: get rid of dev#####################
         # allow to run reduced computations
         self.DEVELOPMENT = False
@@ -86,7 +99,6 @@ class Lurk():
         #number of filters we compute stuff for in development mode
         self.N_FILTERS_DEV = 1
         ###############################################################
-        print("DEV")if self.DEVELOPMENT else print("OKOK")
 
         #model to compute a lurker for
         self.model = model
@@ -114,10 +126,9 @@ class Lurk():
         self.dataset = ImageFolderWithPaths(self.IMGS_DIR,transform=self.preprocess)
         self.data_loader = torch.utils.data.DataLoader(self.dataset, batch_size=1, shuffle=True)
         # each class has 3 kinds of representation: (1)class titles (ex: "penguin") (2) dirname (ex:"n02018795") (3) label (ex:724)
-        self.TITLE2CLASS = TITLE2CLASS
         self.CLASS2LAB = self.dataset.class_to_idx
         self.LAB2CLASS = {i:j for j,i in self.CLASS2LAB.items()}
-        
+        self.TITLE2CLASS = title2class
         
         if load_json_path is not None:
             # loading information from a previously computed json file
@@ -139,7 +150,7 @@ class Lurk():
     
     def __build_model_info(self):
         """
-        build the model_info from scratch
+        build the model_info from scratch: the model_info is the main data structure to store all the information about computed data, loading paths serving and states.
         """
         model_info = []
         layers = []
@@ -183,7 +194,8 @@ class Lurk():
             self.model_info = model_info
             self.conv_layinfos = [lay_info for lay_info in self.model_info if isinstance(lay_info['lay'],nn.Conv2d)]
             
-    def set_state(self,state):
+    def __set_state(self,state):
+        """ set the state to the value passed in parameter"""
         self.state = state
         with open(self.JSON_PATH_WRITE, 'r+') as f:
             data = json.load(f)
@@ -192,10 +204,14 @@ class Lurk():
             json.dump(data, f, indent=2)
             f.truncate()
 
-    def save_to_json(self):
+    def save_to_json(self,alternate_json_path=None):
         """
-        save the json information of self.model_info
+        Save the json information.
+        
+        Args:
+            alternate_json_path (str): Alternate path to save the json. By default, the lurker will save to JSON_PATH_WRITE.
         """
+        path_write = self.JSON_PATH_WRITE if alternate_json_path is None else alternate_json_path
         obj = {'current_json':str(Path("/").joinpath(Path(self.JSON_PATH_WRITE)))}
         with open("saved_model/.current.json", 'w') as f:
             json.dump(obj, f, indent = 2)
@@ -204,14 +220,17 @@ class Lurk():
             if (isinstance(lay_info['lay'],nn.Conv2d)):
                 del lay_info['deproj']
             del lay_info['lay']
-        with open(self.JSON_PATH_WRITE, 'w') as fout:
+        with open(path_write, 'w') as fout:
             model_info2 = {'state':self.state.name,'infos':model_info2}
             json.dump(model_info2, fout, indent = 2)
         print("json saving done!")
         
     def load_from_json(self,load_path):
         """
-        load from json information
+        loads a lurker from a previously computed json. **Watch out: any computation made after loading will overwrite the json file passed in parameter. Please backup the file if you don't wish for any modification.**
+        
+        Args:
+            load_path (str): path to the json to load a lurker from
         """
         layers = []
         with open(load_path, 'r') as fin:
@@ -225,7 +244,7 @@ class Lurk():
         self.model_info = model_info
         self.conv_layinfos = [lay_info for lay_info in self.model_info if isinstance(lay_info['lay'],nn.Conv2d)]
         self.__check_imgs_exist()
-        print("Loading done!") 
+        print("Loading from json done!") 
     
         
     def save_to_dill(self,path):
@@ -241,10 +260,11 @@ class Lurk():
     def load_from_dill(load_path,overwrite=False,alternate_json_path=None):
         """
         load the lurker from a dill (pickle-like) file
+        
         Args:
             load_path(str): path to the dill file
-            overwrite(Bool): whether to overwrite the JSON the lurker reads from
-            alternate_path(str): only valid if overwrite is set to False: specific path to the write json
+            overwrite (Bool): whether to overwrite the JSON the lurker reads from
+            alternate_path (str):  specific path to write the next json. By default, adds a "_copy" extension to the json path set in the pickled instance. Can have a value assigned only if overwrite is set to False.
         """
         assert(not (overwrite and alternate_json_path is not None))
         lurker = torch.load(load_path, pickle_module=dill)
@@ -261,7 +281,7 @@ class Lurk():
                 assert(path.is_file() and path.suffix == ".json")
                 lurker.JSON_PATH_WRITE = alternate_json_path
         lurker.__check_imgs_exist()
-        print("Loading done!") 
+        print("Loading from dill done!") 
         return lurker    
     
     def __check_imgs_exist(self): 
@@ -289,6 +309,7 @@ class Lurk():
     def __get_filt_dir(self,dir_type,layer_name,filter_id):
         """
         return the path to the appropriate folder
+        
         Parameters
         ----------
         dir_type : str
@@ -302,15 +323,20 @@ class Lurk():
     
    
     
-    ################################################################ Generated images ################################################################
+    ################################################# Generated images #######################################################
 
     ################################ average/maximum activation images ################################
-    def compute_top_imgs(self,verbose = False,compute_max=True,compute_avg=True,save_loc=False):
+    def compute_top_imgs(self,verbose = False,compute_max=True,compute_avg=True,save_loc=True):
         """
         compute the average and max images for all the layers of the model_info such that each filter of each layer knows what are
         its favourite images (write down the link to the avg/max images in the json)
+        
+        Args:
+            compute_max (bool): whether to compute the top maximum activation images
+            compute_avg (bool): whether to compute the top average activation images
+            save_loc (bool): save the images to the GEN_IMGS_DIR from the SRC_DIR (training set) upon completion of the function call
         """
-        self.set_state(State.compute_top)
+        self.__set_state(State.compute_top)
         t_start = perf_counter()  
         assert(compute_max or compute_avg)
         self.__reset_histos()
@@ -353,13 +379,13 @@ class Lurk():
         if save_loc:
             self.save_avgmax_imgs()
         self.__save_cropped()
-        self.set_state(State.idle)
+        self.__set_state(State.idle)
         self.save_to_json()
 
         
     def save_avgmax_imgs(self):
         """
-        save the maximum average/maximum activation for each filter from the trainin set
+        save the top average/maximum activation images figuring in the json to the GEN_IMGS_DIR directory. This allows the lurker to become independant of the training set for subsequent visualization/computations.
         """
         for i,lay_info in enumerate(self.conv_layinfos):
             clear_output(wait=True)
@@ -499,12 +525,18 @@ class Lurk():
                     
     def compute_viz(self,num_imgs_per_layer=None,ratio_imgs_per_layer=None,first_n_imgs=None):
         """
-        Compute the filter visualization for all classes
+        Compute the filter visualization for all layers **only one of num_imgs_per_layer,ratio_imgs_per_layer or first_n_imgs can be have a value assigned.** By default, compute the visualisation for all filters of all layers (can be computationally demanding)
+        
         Args:
-            num_imgs_per_layer(int): number of filters to compute the visualization for for each class
+            num_imgs_per_layer (int): number of filters to compute the visualization for for each class
             ratio_imgs_per_layer(float): ratio of filters to compute the visualization for for each class
+            
+        .. note::
+            
+            The lurker will first check if any file exists at its write locations for the filter visualisations/ gradients. If this is the case, it will update its json path accordingly, but won't compute any new images for computational reasons. Please remove any existing images you wish to re-compute filter visualisations/ gradients for.
+            
         """
-        self.set_state(State.compute_activ)
+        self.__set_state(State.compute_activ)
         checks = [num_imgs_per_layer is not None , ratio_imgs_per_layer is not None,first_n_imgs is not None]
         assert(sum(checks)==1 or sum(checks)==0)
         for lay_indx,lay_info in enumerate(self.conv_layinfos):
@@ -523,18 +555,23 @@ class Lurk():
             elif checks[2]:
                 indexes = np.arange(N)[:first_n_imgs]
             self.compute_layer_viz(int(lay_info['id']),indexes)
-        self.set_state(State.idle)
+        self.__set_state(State.idle)
 
 
     def compute_layer_viz(self,layer_indx,filter_indexes = None):
         """
-        compute  and save the filter maximal activation as an image. Compute it only for filters for which
-        it has not been computed yet: you need to delete the existing image if you wish for a refresh.
+        compute  and save the filter visualisation as an image. Compute it only for filters for which
+        it has not been computed yet: **you need to delete the existing images manually if you wish for a refresh**.
+        
         Args:
-            layer_indx(int): layer to compute the filter for
-            filter_indexes(list(int)):  list of filter to compute the visualization for
+            layer_indx (int): layer to compute the filter for
+            filter_indexes (list of int):  indexes of filters to compute the visualizations for. By default, compute it for each filter.
+            
+        .. note::
+            
+            The lurker will first check if any file exists at its write locations for the filter visualisations/ gradients. If this is the case, it will update its json path accordingly, but won't compute any new images for computational reasons. Please remove any existing images you wish to re-compute filter visualisations/ gradients for.
         """
-        self.set_state(State.compute_activ)
+        self.__set_state(State.compute_activ)
         lay_info = self.model_info[layer_indx]
         if filter_indexes is None:
             filter_indexes = range(lay_info["lay"].out_channels)
@@ -575,21 +612,65 @@ class Lurk():
             filt["filter_viz"] = filt_path
             self.save_to_json()
         print("Visualization done!")
-        self.set_state(State.idle)
+        self.__set_state(State.idle)
         self.save_to_json()
 
 
         
     ################################ Gradients ################################
+    def compute_grads_layer(self,lay_indx,compute_avg = True,compute_max = True,first_n_imgs=None):
+        """
+        compute the gradients for the top avg and/or max images of the layer corresponding to lay_indx.
+        
+        Args:
+            layer_indx (int): index of the layer
+            compute_avg (bool): whether to compute the gradient for the top average
+            compute_max (bool): whether to compute the gradient for the top max
+            first_n_imgs (int): if initialized, compute only the gradient for the first first_n_imgs filters of the layer
+            
+        .. note::
+            
+            The lurker will first check if any file exists at its write locations for the filter visualisations/ gradients. If this is the case, it will update its json path accordingly, but won't compute any new images for computational reasons. Please remove any existing images you wish to re-compute filter visualisations/ gradients for.
+        """
+        self.__set_state(State.compute_grad)
+        gbp = GuidedBackprop(self.model)
+        lay_info = self.conv_layinfos[lay_indx]
+        for j,filt in enumerate(lay_info['filters']):
+            clear_output(wait=True)
+            if (first_n_imgs is not None):
+                print("Grads Progression:layer{} {:.2f}%".format(lay_indx,j/first_n_imgs*100))
+                if (j > first_n_imgs):
+                    break
+            else:
+                print("Grads Progression:layer{} {:.2f}%".format(lay_indx,j/len(lay_info[lay_indx]['filters'])*100))
+            if compute_avg:
+                path = self.__get_filt_dir("avg_act_grad",lay_info['name'],filt["id"])
+                self.__compute_grads_filt(gbp,filt,path,lay_info['id'],"avg_imgs")
+            if compute_max:
+                path = self.__get_filt_dir("max_act_grad",lay_info['name'],filt["id"])
+                self.__compute_grads_filt(gbp,filt,path,lay_info['id'],"max_imgs")
+                self.__save_cropped(grad= True)
+        self.save_to_json()
+        self.__set_state(State.idle)
 
-    def compute_grads(self,verbose = False,compute_avg = True,compute_max = True,first_n_imgs=None):
+    def compute_grads(self,compute_avg = True,compute_max = True,first_n_imgs=None,verbose = False):
         """
         compute the gradients for the fav images of all filters of all layers for the model_info
+        
         Args:
             model_info (dic): as described above
             origin_path (str): path where to store the folders containing the gradient images
+            compute_avg (bool): whether to compute the gradient for the top average
+            compute_max (bool): whether to compute the gradient for the top max
+            first_n_imgs (int): if initialized, compute only the gradient for the first first_n_imgs filters of **each layer**
+            verbose (bool): displays progression info
+            
+        .. note::
+            
+            The lurker will first check if any file exists at its write locations for the filter visualisations/ gradients. If this is the case, it will update its json path accordingly, but won't compute any new images for computational reasons. Please remove any existing images you wish to re-compute filter visualisations/ gradients for.
+            
         """
-        self.set_state(State.compute_grad)
+        self.__set_state(State.compute_grad)
         gbp = GuidedBackprop(self.model)
         for i,lay_info in enumerate(self.conv_layinfos):
             if (i >= self.N_LAYERS_DEV and self.DEVELOPMENT):
@@ -597,12 +678,12 @@ class Lurk():
             for j,filt in enumerate(lay_info['filters']):
                 clear_output(wait=True)
                 if (self.DEVELOPMENT):
-                    print("Grads Progression:layer{}/{} {}%".format(i+1,self.N_LAYERS_DEV,j/self.N_FILTERS_DEV*100))
+                    print("Grads Progression:layer{}/{} {:.2f}%".format(i+1,self.N_LAYERS_DEV,j/self.N_FILTERS_DEV*100))
                     if (j >=self.N_FILTERS_DEV):
                         break
                 else:
                     if (first_n_imgs is not None):
-                        print("Grads Progression:layer{}/{} {}%".format(i+1,len(self.conv_layinfos),j/len(conv_layinfos)*100))
+                        print("Grads Progression:layer{}/{} {:.2f}%".format(i+1,len(self.conv_layinfos),j/first_n_imgs*100))
                         if (j > first_n_imgs):
                             break
                 if compute_avg:
@@ -612,12 +693,13 @@ class Lurk():
                     path = self.__get_filt_dir("max_act_grad",lay_info['name'],filt["id"])
                     self.__compute_grads_filt(gbp,filt,path,lay_info['id'],"max_imgs")
                     self.__save_cropped(grad= True)
-                self.save_to_json()
-        self.set_state(State.idle)
+                #self.save_to_json()
+        self.__set_state(State.idle)
 
     def __compute_grads_filt(self,gbp,filt,path,lay_id,img_type):
         """
         compute the gradients wrt to the favourite images of a filter filt.
+        
         Args:
             gbp (GuidedBackprop): fitted on the model
             filt (dic): filter from a layer
@@ -637,6 +719,7 @@ class Lurk():
 
             #if the image already exists, we don't compute it again
             if grad_path.exists():
+                print("grad_exist!")
                 filt[grad_strindx][i] = str(grad_path)
                 continue
             image = Image.open(img_path)
@@ -656,11 +739,15 @@ class Lurk():
     ################################ Plotting ################################
     def __repr__(self):
         return self.model.__repr__()
+    
     def plot_hist(self,layer_indx,filt_indx,hist_type="max",num_classes=30):
         """
-        layer_indx(int): index of the layer
-        filt_indx(int): index of the filter
-        hist_type(str): either "max" or "avg": which hist to plot
+        plot the sorted average values of avg/max spikes over the dataset for each class as an histogram
+        
+        Args:
+            layer_indx (int): index of the layer
+            filt_indx (int): index of the filter
+            hist_type (str): either "max" or "avg": which hist to plot
         """
         assert(hist_type == "max" or hist_type == "avg")
         lay_info = self.model_info[layer_indx]
@@ -674,53 +761,60 @@ class Lurk():
 
     def plot_filter_viz(self,layer_indx,filt_indx):
         """
-        plot the filter visualization
-        Parameters:
-        -----------
-        layer_indx : int
-            index of the layer
-        filt_indx : int
-            index of the filter
+        plot the filter visualization for the corresponding layer/filter combination
+        
+        Args:
+            layer_indx (int): index of the layer
+            filt_indx (int): index of the filter
         """
         filt = self.conv_layinfos[layer_indx]['filters'][filt_indx]
         im = Image.open(filt["filter_viz"])
         plt.imshow(np.asarray(im))
+        
 
-    def plot_top(self,kind,layer_indx,filt_indx,add_grad=False):
+    def plot_top(self,kind,layer_indx,filt_indx,plot_imgs=True,plot_grad=False):
         """
         plot the top activation samples of the train set for a given filter
-        Parameters:
-        -----------
-        kind : str
-            either "avg" or "max"
-        layer_indx : int
-            index of the layer
-        filt_indx : int
-            index of the filter
-        add_grad : bool
-            whether to plot the corresponding gradients below the original image
+        
+        Args:
+            kind (str): either "avg" or "max"
+            layer_indx (int): index of the layer
+            filt_indx (int): index of the filter
+            plot_imgs (bool): True to plot the images
+            plot_grad (bool): True to plot the gradients
+            
+        .. note::
+            
+            Either one of plot_imgs or plot_grad must be set to True.
+            
         """
         filt = self.conv_layinfos[layer_indx]['filters'][filt_indx]
-        imgs = filt['{}_imgs'.format(kind)]
-        N = len(imgs)
-        if add_grad:
-            imgs = imgs + filt["{}_imgs_grad".format(kind)]
-        M = 2 if add_grad else 1
-        fig,axes = plt.subplots(M,N,figsize=(10,10))
+        imgs = []
+        grads = []
+        if (not plot_grad and not plot_imgs):
+            raise NameError("No data to display: set one of plot_grad or polt_imgs to True.")
+        if plot_imgs:
+            imgs = filt['{}_imgs'.format(kind)]
+        if plot_grad:
+            grads = filt["{}_imgs_grad".format(kind)]
+        N = max(len(imgs),len(grads))
+        M = 2 if sum([plot_imgs,plot_grad])== 2 else 1
+        fig,axes = plt.subplots(M,N,figsize=(20,5))
+        imgs = imgs + grads
         for i,(ax,img) in enumerate(zip(axes.flatten(),imgs)):
             im_pil = Image.open(img)
-            ax.imshow(np.asarray(im_pil))
+            ax.axis('off')
+            ax.imshow(np.asarray(im_pil),interpolation='nearest')
+            
     def plot_crop(self,layer_indx,filt_indx,grad=False):
         """
         plot the top max images along with the cropped version which leads to the highest activating output for the given filter
-        Parameters:
-        -----------
-        layer_indx : int
-            index of the layer
-        filt_indx : int
-            index of the filter
-        grad : bool
-            whether to plot grad or the original image
+        
+        Args:
+            layer_indx (int): index of the layer
+            filt_indx (int): index of the filter
+            grad (bool): whether to plot grad or the original image
+            grad: whether to plot the grad equivalent 
         """ 
         key = "max_imgs"
         key_crop = "max_imgs_crop" 
@@ -734,11 +828,22 @@ class Lurk():
         for i,(ax,img) in enumerate(zip(axes.flatten(),imgs+crop_imgs)):
             im_pil = Image.open(img)
             ax.imshow(np.asarray(im_pil))
-        ################################ Serving ################################
+            
+    ################################ Serving ################################
     def serve(self,port=5000):
+        """
+        serves the application on a localport
+        
+        Args:
+            port (int): the port to serve the application on
+        """
         self.p = multiprocessing.Process(target = app_start,args=(port,))
         self.p.start()
+        
     def end_serve(self):
+        """
+        end the served application
+        """
         if self.p is None:
             raise NameError("No server running")
         self.p.terminate()
