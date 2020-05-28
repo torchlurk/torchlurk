@@ -592,7 +592,7 @@ class Lurk():
                 pass
 
         filter_indexes = [i for i in filter_indexes if not i in pre_existing]
-        print("Effectively computing the filters:"filter_indexes)
+        print("Effectively computing the filters:",filter_indexes)
 
         for j,filt_indx in enumerate(filter_indexes):
             print("Filter {} / {}".format(j+1,len(filter_indexes)))

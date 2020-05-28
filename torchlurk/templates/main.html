@@ -49,18 +49,12 @@
     <title>Document</title>
 </head>
 <body>
+
     <main>
-        
-        <h1 class="julien titel-page"> Explore the Layers </h1>
-        
-        <div  id= "indicator" class="Fixed Center" style="background-color:green;width:5%" >
-          <p>Idle </p>
-        </div>
-        <div class="row">
-        
-        
-        
-          <div class=" firstColumn column">
+      <!-- <h1 class="julien titel-page"> Explore the Layers </h1> -->
+      <div class="row">
+
+         <div class=" firstColumn column">
           <!-- first colomn with the swiper -->
               <div class="julien swiper-container">
                   <!-- Additional required wrapper -->
@@ -73,118 +67,150 @@
                   <!-- If we need scrollbar -->
                   <div class="julien swiper-scrollbar"></div>
               </div>
+            
+
           </div>   <!-- end firstColumn-->
 
-        
-            <div class=" secondColumn column">
-            <!-- second colomn with the swiper -->
-            <!---------------------------------->
-                <!-- addition du main_wrapper == filtersPage :)-->
-                <div class="julien main_wrapper">
-                    <h1 class="julien titel-filter "></h1>
-                
-                    <div class="julien grid-wrapper">
-                        <div class="julien grid-container"></div>
-                    </div>
-                
-                    <div class="julien modal-container">
-                        <div class="julien modal-header">
-                                    <a href="#avg_imgs-display">avg_imgs-display</a>
-                                    <a href="#max_imgs-display">max_imgs-display</a>
-                                    <a href="#actmax_img-display">actmax_img-display</a>
-                                    <div class="julien close-div" style="padding-right:0;">&times;</div>
-                        </div>
-                        <!-- la popu up doit être codée dans le modal-body
-                        see w3school chaque bouton et relié à un displayContent-->
-                        <div class="julien modal-body">
-                            <div class="julien content-wrapper">
-                                <div class="julien displayContent" id = "avg_imgs-display" > 
-                                    <h3 class="julien displayTitel"> histo_counts_avg </h3>
-                                    <p class="julien histo_counts_avg-description description"></p>
-                                    <div class="julien favCatHistogram histo"></div>
+
+          <div class=" secondColumn column">
+             
+         <img class="gifLogo" src="{{ url_for('static',filename='imgs/blink_lurk.gif') }}" width="390" height="500">
+          <!-- second colomn with the swiper -->
+          <!---------------------------------->
+              <!-- addition du main_wrapper == filtersPage :) -->
+              <div class="julien main_wrapper">
+               
+                  <h1 class="julien titel-filter "></h1>
+
+                  <div class="julien grid-wrapper">
+                      <div class="julien grid-container"></div>
+                  </div>
+
+                  <div class="julien modal-container">
+                      <div class="julien modal-header">
+                              <!--   chage a to button --> <!--
+                                  <a class="defaultButton AvgDisplay" href="#avg_imgs-display">avg_imgs-display</a> 
+                                  <a class=" MaxDisplay" href="#max_imgs-display">max_imgs-display</a>
+                                  <a class=" ActDisplay" href="#actmax_img-display">actmax_img-display</a>
+                                  <div class="julien close-div" style="padding-right:0;">&times;</div> -->
+                               <!--   chage a to button -->
+                                  <button class=" popUp AvgDisplay" onclick="myFunction(this,'avg_imgs-display')">Average Activation</button>
+                                  <button class=" popUp defaultButton ActDisplay" onclick="myFunction(this,'actmax_img-display')">Filter Visualization</button>
+
+                                  <button class="popUp MaxDisplay" onclick="myFunction(this,'max_imgs-display')">Max Activation</button>
+                                  <div class="julien close-div" style="padding-right:0;">&times;</div>
+
+                      </div>
+                      <!-- la popu up doit être codée dans le modal-body
+                      see w3school chaque bouton et relié à un displayContent-->
+                      <div class="julien modal-body" onscroll="drawForEffect()">
+                          <div class="julien content-wrapper">
+                              <div class="julien displayContent hidden" id = "avg_imgs-display" >
+                                 <h2 class="sectionTitel">Average Activation</h2>
+
+                                  <h3 class="julien displayTitel">Classes Histogram</h3>
+                                  <p class="julien histo_counts_avg-description description"></p>
+                                  <div class="julien favCatHistogram histo"></div>
+
+                                  <h3 class="julien displayTitel relativeButton"> Top Images </h3>
+                                 <div class="alignButtons">
                                     
-                                    <h3 class="julien displayTitel"> avg_imgs </h3>
-                                    <p class="julien avg_imgs-description description"></p>
-                                    <div class="julien avg_imgs-firstRow images"></div>
-                                    <div class="julien avg_imgs-secondRow images"></div>
+                                    <span class ="spanButtonChangeToAvg gauche"> Images </span><span class ="spanButtonChangeToGrad droite">Gradients</span>
 
-                                
-                                    <h3 class="julien displayTitel"> avg_imgs_grad </h3>
-                                    <p class="julien avg_imgs_grad-description description"></p>
-                                    <div class="julien avg_imgs_grad-firstRow images"></div>
-                                    <div class="julien avg_imgs_grad-secondRow images"></div>
+                                 </div>
 
-                                    
-                                    <h3 class="julien displayTitel"> favHisto </h3>
-                                    <p class="julien avg_imgs_histo-description description">
-                                    </p>
-                                    <div class="julien favHistogram histo"></div>
+                                  <p class="julien avg_imgs-description description"></p>
+                                    <div class="julien avg_imgs-firstRow images rowImages"></div>
+                                    <div class="julien avg_imgs-secondRow images rowImages"></div>
 
-                                </div>
-                
-                                <div class="julien displayContent " id ="max_imgs-display" >
-                                    <h3 class="julien displayTitel"> histo_counts_max </h3>
-                                    <p class="julien histo_counts_max-description description"></p>
-                                    <div class="julien maxCatHistogram histo"></div>
+                                  <h3 class="julien displayTitel">Histogram Top</h3>
+                                  <p class="julien avg_imgs_histo-description description">
+                                  </p>
+                                  <div class="julien favHistogram histo"></div>
+                                 </div>
 
-                                    <h3 class="julien displayTitel"> max_imgs </h3>
-                                    <p class="julien max_imgs-description description"></p>
-                                    <div class="julien max_imgs-firstRow images"></div>
-                                    <div class="julien max_imgs-secondRow images"></div>
+                              </div>
+
+                              <div class="julien displayContent hidden " id ="max_imgs-display" >
+                                 <h2 class="sectionTitel">Max Activation</h2>
+                                  <h3 class="julien displayTitel">Classes Histogram</h3>
+                                  <p class="julien histo_counts_max-description description"></p>
+                                  <div class="julien maxCatHistogram histo"></div>
+
+                                  <h3 class="julien displayTitel relativeButton">Top Images</h3>
+
+                                 <div class="alignButtons">
+                                    <span class ="spanButtonChangeToMax gauche">Images</span><span class ="spanButtonChangeToMaxGrad droite">Gradients</span>
+                                 </div>
+
+                                  <p class="julien max_imgs-description description"></p>
+                                  <div class="blockImages">
+                                    <div class="julien max_imgs-firstRow images rowImages"></div>
+                                    <div class="julien max_imgs-secondRow images rowImages"></div>
+                                 </div>
+                                  <!--    no more useful --> 
+                                  <!--
+                                 <h3 class="julien displayTitel"> max_imgs_grad </h3>
+                                 <p class="julien max_imgs_grad-description description"></p>
+                                 <div class="blockImages">
+                                   <div class="julien max_imgs_grad-firstRow images"></div>
+                                   <div class="julien max_imgs_grad-secondRow images"></div> 
+                                </div> -->
+                                  <!--    no more useful -->
+                                  <h3 class="julien displayTitel relativeButton">Cropped</h3>
+
+                                 <div class="alignButtons">
+                                    <span class ="spanButtonChangeToCrop gauche">Images</span><span class ="spanButtonChangeToCropGrad droite">Gradients</span>
+                                 </div>
+                                 
+                                  <p class="julien max_imgs_crop-description description"></p>
+                                  <div class="blockImages">
+                                    <div class="julien max_imgs_crop-firstRow images cropImages rowImages"></div>
+                                    <div class="julien max_imgs_crop-secondRow images cropImages rowImages"></div>
+
+                                 </div>
+                                  
+
+                                 
+                                 <!--    no more useful --> <!--
+                                  <h3 class="julien displayTitel"> max_imgs_crop_grad </h3>
+                                  <p class="julien max_imgs_crop_grad-description description"></p>
+                                  <div class="blockImages">
+                                    <div class="julien max_imgs_crop_grad-firstRow images cropImages"></div>
+                                  <div class="julien max_imgs_crop_grad-secondRow images cropImages"></div>
+
+                                 </div>  --!
+                                  <!--    no more useful -->
+
+                                  <h3 class="julien displayTitel">Histogram Top</h3>
+                                  <p class="julien max_imgs_histo-description description"></p>
+                                  <div class="julien maxHistogram histo"></div>
+                              </div>
+
+                              <div class="julien displayContent hidden " id ="actmax_img-display" >
+                                  <h2 class="sectionTitel">Filter Visualization</h2>
+                                  <h3 class="julien displayTitel">Filter Visualization</h3>
+                                  <p class="julien actmax_img-description description">
+                                  </p>
+                                  <div class="julien actmax_img images filter_viz"></div>
+                              </div>
+                          </div><!-- end of content-wraper-->
+                      </div> <!-- end of modal body-->
+                  </div> <!-- end of modal container-->
+                  <!--  overlay au niveau du modal-container-->
+                  <div class="julien overlay "></div>
+
+              </div> <!-- end of main_wrapper == filtersPage :)-->
+          </div>  <!-- end of secon column-->
 
 
-                                    <h3 class="julien displayTitel"> max_imgs_crop</h3>
-                                    <p class="julien max_imgs_crop-description description"></p>
-                                    <div class="julien max_imgs_crop-firstRow images"></div>
-                                    <div class="julien max_imgs_crop-secondRow images"></div>
-
-
-                                    <h3 class="julien displayTitel"> max_imgs_grad </h3>
-                                    <p class="julien max_imgs_grad-description description"></p>
-                                    <div class="julien max_imgs_grad-firstRow images"></div>
-                                    <div class="julien max_imgs_grad-secondRow images"></div>
-
-
-                                    <h3 class="julien displayTitel"> max_imgs_crop_grad </h3>
-                                    <p class="julien max_imgs_crop_grad-description description"></p>
-                                    <div class="julien max_imgs_crop_grad-firstRow images"></div>
-                                    <div class="julien max_imgs_crop_grad-secondRow images"></div>
-
-
-                                    <h3 class="julien displayTitel"> maxHisto </h3>
-                                    <p class="julien max_imgs_histo-description description"></p>
-                                    <div class="julien maxHistogram histo"></div>
-                                </div>
-
-                                <div class="julien displayContent " id ="actmax_img-display" >
-                                    <h3 class="julien displayTitel"> actmax_img </h3>
-                                    <p class="julien actmax_img-description description">
-                                    </p>
-                                    <div class="julien actmax_img images"></div>
-                                </div>
-                            </div><!-- end of content-wraper--> 
-                        </div> <!-- end of modal body-->
-                    </div> <!-- end of modal container-->
-                    <!--  overlay au niveau du modal-container-->
-                    <div class="julien overlay "></div> 
-                
-                </div> <!-- end of main_wrapper == filtersPage :)-->
-            </div>  <!-- end of secon column-->
-        
-
-        </div> <!-- end of row-->
-
-
-
-
-        
+      </div> <!-- end of row-->
     </main>
+
     <script src="https://unpkg.com/swiper/js/swiper.js"></script>
     <script src="https://unpkg.com/swiper/js/swiper.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-   <!-- julien static link -->
-    <!-- <script src="../static/main.js"></script> -->
     <script src="{{ url_for('static',filename='main.js') }}"></script>
 
     <script>
@@ -192,7 +218,6 @@
             /////1step: instantiate mySwiper//////////
             /////to append slides later//////////
 
-            
             var mySwiper = new Swiper ('.swiper-container', {
                 // Optional parameters
                 direction: 'horizontal',
@@ -211,13 +236,13 @@
                 //freeModeMomentumRatio: 2,
                 //freeModeSticky: true,
                 watchSlidesProgress: true,
-                //on: event :) 
+                //on: event :)
                 // If we need pagination
                 pagination: {
                 el: '.swiper-pagination',
                 type: "fraction",
                 formatFractionCurrent: number => number-1,
-                formatFractionTotal: number => number-1	
+                formatFractionTotal: number => number-1
                 },
                 // Navigation arrows
                 //navigation: {
@@ -234,13 +259,22 @@
         /////////////////////////////////////////////
         /////////////append slides to mySwiper and update the whole///////////////
         //  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"> //
-        
-    </script>  
+
+    </script>
+
+    <!-- Footer -->
+    <footer id="footer">
+      <div class="container">
+        <ul class="icons">
+          <li><a href="https://github.com/torchlurk/torchlurk" class="icon fa-github"></a></li>
+        </ul>
+        <ul class="copyright">
+          <li>Yann Mentha, Julien Berger, Gianni Giusto</li>
+        </ul>
+      </div>
+    </footer>
 
 
 
-
-    
-    
 </body>
 </html>

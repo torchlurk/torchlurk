@@ -1,318 +1,835 @@
-/* c'est un copié collé de filtersPage.css !*/
-.bezier{
-    display: block;
-    margin: 0 auto;
-  }
-  .actif{
-    fill: red;
+.TORCHLURKLINK:link{
+	text-decoration: none;
+	color: black;
   }
   
+  .TORCHLURKLINK:visited{
+	text-decoration: none;
+	color: black;
   
-  .titel-page{
+  }
+.gifLogo{
+	position: absolute;
+	top: 60%;
+	left: 60%;
+	transform: translate(-60%,-60%) scale(1);
+}
+
+/*********** buttons for AVGtoGRAD et Aussi MAXtoGRAD */
+.alignButtons{
+	margin-left: 8%;
+	margin-right: 8%;
+	display: flex;
+	justify-content: center; /* flex-end */
+	align-items: center;
+	/*margin-top: 5%;
+	margin-bottom: 3%;*/
+}
+.alignButtons h3{
+	margin: 0;
+}
+.alignButtons span{
+	padding: 0 30px;
+	
+	border-radius: 30px;
+	/*padding: 0 2%;*/
+	cursor: pointer;
+	/*margin-left: 10px;*/
+	
+	/*left: 16.5%; */
+	/*width: 18%; */
+    height: 55%;
+    font-size: 1.1vw;
+    background-color: rgba(238,76,44,0.0);
+    color: rgba(238,76,44);
+    font-weight: bold;
+    border: 2px solid rgba(238, 76, 44, 0.6);
+    transition-duration: 0.4s;
+
+}
+.alignButtons  span:hover{
+	background-color: rgba(238,76,44,0.1); /*rgba(255,255,255,0.1);*/
+	color: rgba(238,76,44); /*rgba(255,255,255);*/
+
+}
+.alignButtons  span.droite{
+	cursor: pointer;
+	margin-left: 2%;
+	/*margin-left: 10px;*/
+	/*position: relative;*/
+	/*left: 27.5%*/
+}
+.alignButtons  span.gauche{
+	/*margin-left: 5.5%;*/
+
+}
+
+.alignButtons  span.active {
+	background-color: rgba(238,76,44,0.1); /*rgba(255,255,255,0.1);*/
+	border: 2px solid;
+	border-color: rgba(238, 76, 44, 0.6);
+}
+
+/*********************************************************************/
+.displayContent.hidden{
+	display: none;
+}
+
+.content-wrapper{ /* Just to let a space between the header and the firt titel in the popUp .... */
+	margin-top: 3%;
+
+}
+
+
+
+/* ############################## TITLE ############################## */
+.titel-page {
   font-size: 4.5rem;
   font-weight: bold;
-    text-align: center;
-    color: #615f5f;
-    
-  }
-  .titel-filter{
-    text-align: center;
-    /*color: #ebebeb;*/
-    color: orangered;
-  }
-  
-  .histo rect{
-   /* fill: #ee4c2c; */
-   fill: orangered;
-   opacity: 0.9;
-  }
-  
-  .histo text{
-    color: black;
-    font-weight: bold;
-    font-family: Helvetica, sans-serif;
-    font-size: 15px;
-  }
-  .histo path{
-    color: black;
-  }
-  .histo .tick{
-    color: black;
-  }
-  
-  
-  body,html{
-   /* height: 100%;*/
-   /*background-image: linear-gradient( 120deg, #fdfbfb 0%, #ebedee 100% );  */
-    background:  #f6f6f6;
-    color: #ebebeb;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  body{
-    /*background-image: url("torch1000.svg");*/
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: 10px 20px;
-    background-size: 180px 180px;
-  }
-  
-  .main_wrapper{ /* contains filtersPage :))*/
-    /*width: 70%;*/
-    /*height:100%*/
-   /* margin: 0 auto;*/
-  }
-  /*---CSS for the Grid part------------!! dont know how it works ! :)) -------------------*/
-  .grid-wrapper{
-    display: flex;
-    margin: auto;
-    width: 100%;
-   /* height: 70%;*/
-  }
-  .grid-container{
-    /*padding: 10px;*/
-    width: 100%;
-    /*height: 100%;*/
-    margin: auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 12%);
-    grid-auto-rows: 1fr;
-    
-  }
-  
-  .grid-container::before {
-    content: '';
-    width: 0;
-    padding-bottom: 100%;
-    grid-row: 1 / 1;
-    grid-column: 1 / 1;
-  }
-  .grid-container > *:first-child {
-    grid-row: 1 / 1;
-    grid-column: 1 / 1;
-  }
-  /* Just to make the grid visible */
-  .grid-container > * {
-    background: rgba(0,0,0,0.1);
-    border: 1px grey solid;
-  }
-  
-  .griditem{
-   /*background-color: teal;*/
-    /*the margin should be calculated in JS
-    but margin : 4px is nice...*/
-    margin: 4px;
-    border-radius: 5px;
-  }
-  .griditem:hover{
-    transform: scale(1.3);
-    z-index: 2;
-    /*border: 2px solid #3ee7ad;*/
-    cursor: pointer;
-  }
-  .unitNumber{
-    display: inline-block;
-    font-size: 1.4vw;
-    border-bottom-right-radius: 5px;
-    padding: 2px;
-    color: black;
-    background-color: silver;
-    opacity: 0.8;
-  }
-  
-  
-  /*-------CSS for the pop-ups--------*/
-  
-  .modal-container{
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%) scale(0);
-    transition: 1000ms ease-in-out;
-    border: solid #615f5f 1px;
-    border-radius: 5px;
-    z-index: 10; /*pour le dessiner sur tout le reste*/
-    background-color: #2e2d2e;
-    width: 60%; /*width 500px*/
-    height: 75%; /*max-width 80%*/
-    /*background-color: rgba(255, 255, 255, 0.6); */
-    backdrop-filter: blur(40px);
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(255,255,255,0.6); /* Black w/opacity/see-through */
-  }
-  
-  .modal-container.active{
-    transform: translate(-50%,-50%) scale(1);
-  }
-  
-  .modal-header{
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-   
-    width: 100%;
-    height: 10%; /*% of the modal container*/
-   /* border-bottom: 1px #3d3d3f solid; */
-  }
-  
-  .modal-header a:link, .modal-header a:visited {
-    /*display: inline-block;
-    position: relative;
-    top: 20%;
-    */
-  margin-right: 3px;
-  margin-left: 3px;
-    padding: 5px;
-    background-color: white;
-    text-decoration: none;
-    color: rgb(71,69,69);
-    border: 2px solid rgba(238, 76, 44, 0.6);
-    font-weight: bold;
-  }
-  
-  .modal-body{
-    width: 100%;
-    height: 90%; /*90% of the modal container*/
-    
-    overflow: auto; /* or scroll...*/
-  }
-  
-  .modal-body::-webkit-scrollbar{
-    width: 13px;
-    height: 13px;
-  }
-  
-  .modal-body::-webkit-scrollbar-track{
-    border: 0px solid #ebebeb;
-    border-radius: 10px;
-    box-shadow: inset 0 0 5px #ebebeb;
-    /*box-shadow: inset 0 0 2.5px 2px rgba(0,0,0,0.5);*/
-  }
-  
-  .modal-body::-webkit-scrollbar-thumb{
-   /* background: linear-gradient(45deg, rgb(236, 226, 226),rgb(32, 32, 34));*/
-   background-color: rgba(97,95,95,1);
-   
-    border-radius: 20px;
-  }
-  
-  .modal-container p{
-    color: black;
-    text-align: justify;
-  }
-  
-  .displayTitel{
-    color: black;
-    text-align: center;
-  }
-  .close-div:hover{
-    color: tomato;
-  }
-  .close-div{
-    cursor: pointer;
-    border: none;
-    outline: none;
-    background: none;
-    color:rgb(71,69,69);
-    font-size: 1.9rem;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    margin-right: 3px;
-  }
-  
-  .overlay{
-   position: fixed;
-   z-index: 1;
-   opacity: 0;  /*au moment ou on lui donne une opacité il capte les mouses events a la place de ce qu'il y a desoous*/
-   top: 0;
-   left: 0;
-   right: 0;
-   bottom: 0;
-   background-color: rgb(249, 248, 253,0.6);
-   transition: 1000ms ease-in-out;
-   pointer-events: none;  /* pour l'opacité !*/
-  }
-  .overlay.active{
-    
-    opacity: 1;
-    pointer-events: all;
-  }
-  /*/////CSS pour le modal-body composé du fixed-sidebar et du content-wrapper ///////*/
-  
-  
-  /*.fixed-sidebar{
-    width: 20%;
-    height: 90%; 
-    position: absolute;
-  }
-  */
-  /*
-  .content-wrapper{
-     margin-left: 22%;
-  } */
-  
-  /*
-  .tablink{
-    word-wrap: break-word;
-    display: block;
-    height: 8%;
-    width: 100%;
-    background-color: teal;
-  
-  }
-  */
-  
-  /*display content et toggle de unClicked*/
-  
-  /*
-  .displayContent{ 
-    display: block;   
-  }
-  .displayContent.unClicked{
-    display: none; // par default tout est mis avec la classe unclicked dans le html sauf le id = defaultDisplay... 
-  } 
-  
-  */
-  
-  .images{
-    display: flex;
-    justify-content: space-around;
-    
-  }
-  
-  /*---- CSS pour avoir 2 colonnes !!! --- */
-  .firstColumn{
-    float: left;
-    width: 40%;
-    margin-top: 8%;
-  
-  }
-  .secondColumn{
-    float: left;
-    width: 60%;
-    
-  }
-  
-  /* Clear floats after the columns */
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-  
-  .swiper-container{
-    /* see HTML !*/
-  }
-  .main_wrapper{
-    width: 100%;
-    margin: 0 auto;
-  }
- .Fixed
- {
-    position: fixed;
-    top: 20px;
- }
-.Center {
   text-align: center;
+  color: #615f5f;
+}
+
+h1.titel-filter {
+  text-align: center;
+  /*color: #ebebeb;*/
+  color: black;
+  font-size: ;
+  
+}
+
+.histo svg{
+	/*margin-right: 70px; */
+	margin-right: 5%;
+	border-bottom: solid 1px rgba(144, 144, 144, 0.25);
+	box-shadow: 0px 0.0375em 0.125em 0px rgba(0, 0, 0, 0.05);
+	margin-bottom: 10%;
+}
+.histo{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+	
+}
+
+.histo rect {
+ /* fill: #ee4c2c; */
+ fill: rgb(238,76,44);
+ opacity: 1;
+}
+
+.histo text {
+  color: black;
+  font-weight: bold;
+  font-family: Helvetica, sans-serif;
+  font-size: 1vw;
+}
+
+.histo path {
+  color: black;
+}
+
+.histo .tick {
+  color: black;
+}
+
+/*
+body,html{
+
+  background:  #f6f6f6;
+  color: #ebebeb;
+  font-family: 'Arial', sans-serif;
+}*/
+
+/*
+body{
+  background-image: url("torch1000.svg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 10px 20px;
+  background-size: 180px 180px;
+}*/
+
+.main_wrapper { /* contains filtersPage :))*/
+  /*width: 70%;*/
+  /*height:100%*/
+ /* margin: 0 auto;*/
+}
+
+/* ################################## GRID ################################## */
+.grid-wrapper {
+  display: flex;
+  margin: auto;
+  width: 100%;
+ /* height: 70%;*/
+}
+
+.grid-container {
+  /*padding: 10px;*/
+  width: 100%;
+  /*height: 100%;*/
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 9%);
+  padding-right: 5%;
+  grid-auto-rows: 1fr;
+}
+
+.grid-container::before {
+  content: '';
+  width: 0;
+  padding-bottom: 100%;
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+.grid-container > *:first-child {
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+/* Just to make the grid visible */
+.grid-container > * {
+  background: rgba(0,0,0,0.1);
+  border: 1px grey solid;
+}
+
+.griditem {
+ /*background-color: teal;*/
+  /*the margin should be calculated in JS
+  but margin : 4px is nice...*/
+  margin: 4px;
+  /*border-radius: 5px;*/
+  box-shadow: 2px 2px 2px #000000bd;
+}
+
+.griditem:hover {
+  transform: scale(1.3);
+  z-index: 2;
+  /*border: 2px solid #3ee7ad;*/
+  cursor: pointer;
+}
+.unitNumber{
+	font-size: 0.9vw;
+  
+  z-index: 1;
+  /*border-bottom-right-radius: 5px; */
+  color: black;
+  background-color: silver;
+  opacity: 0.9;
+}
+
+
+/* ################################# POP UP ################################# */
+.modal-container{
+	padding: 3px;
+  
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%) scale(0);
+  transition: 500ms ease-in-out;
+  border: solid #615f5f 1px;
+ 
+  border-radius: 10px;
+  z-index: 11; /*pour le dessiner sur tout le reste*/
+  width: 75%; /*width 500px*/
+  height: 90%; /*max-width 80%*/
+  /*background-color: rgba(255, 255, 255, 0.6); */
+  /*backdrop-filter: blur(40px);
+  background-color: rgb(0,0,0); /* Fallback color */
+ /*background-color: rgba(255,255,255,0.1); /* Black w/opacity/see-through */ 
+ background-color: white;
+}
+
+.modal-container.active{
+  transform: translate(-50%,-50%) scale(1);
+  
+}
+
+.modal-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  border-bottom: solid 1px rgba(144, 144, 144, 0.25);
+	box-shadow: 0px 0.0375em 0.125em 0px rgba(0, 0, 0, 0.05);
+	color: #484848;
+  
+
+  width: 100%;
+  height: 8%; /*% of the modal container*/
+ /* border-bottom: 1px #3d3d3f solid; */
+}
+
+
+
+.modal-header button {
+	width: 18%;
+    height: 55%;
+    font-size: 1.1vw;
+    background-color: rgba(238,76,44,0.0);
+    color: rgba(238,76,44);
+    font-weight: bold;
+    border: 2px solid rgba(238, 76, 44, 0.6);
+    transition-duration: 0.4s;
+}
+.modal-header button:hover {
+	background-color: rgba(238,76,44,0.1); /*rgba(255,255,255,0.1);*/
+	color: rgba(238,76,44); /*rgba(255,255,255);*/
+	cursor:pointer;
+  }
+
+.modal-header button:focus {
+	outline: none;
+}
+
+button.popUp.active {
+	background-color: rgba(238,76,44,0.1); /*rgba(255,255,255,0.1);*/
+	border: 2px solid;
+	border-color: rgba(238, 76, 44, 0.6);
+}
+
+
+
+.modal-header a:link, .modal-header a:visited {
+
+margin-right: 3px;
+margin-left: 3px;
+  padding: 3px;
+  background-color: white;
+  text-decoration: none;
+  color: rgb(71,69,69);
+  border: 1px solid rgba(238, 76, 44, 0.6);
+  font-weight: bold;
+  font-size: 0.9vw;
+  border-radius: 5%;
+}
+.modal-header a:link:hover, .modal-header a:visited:hover {
+
+
+	  border: 2px solid rgba(238, 76, 44, 0.6);
+	  
+	
+	}
+
+
+.modal-body{
+	/*display: flex;
+	align-items: center;
+	justify-content: center;
+	*/
+  width: 100%;
+  height: 92%; /*90% of the modal container*/
+
+  overflow: auto; /* or scroll...*/
+}
+
+.modal-body::-webkit-scrollbar{
+  width: 13px;
+  height: 13px;
+}
+
+.modal-body::-webkit-scrollbar-track{
+  border: 0px solid #ebebeb;
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px #ebebeb;
+  /*box-shadow: inset 0 0 2.5px 2px rgba(0,0,0,0.5);*/
+}
+
+.modal-body::-webkit-scrollbar-thumb{
+ /* background: linear-gradient(45deg, rgb(236, 226, 226),rgb(32, 32, 34));*/
+ /*background-color: rgba(97,95,95,1);*/
+ 
+ background: linear-gradient(rgb(146, 142, 142), rgb(189, 189, 189) );
+ border: solid 1px rgba(144, 144, 144, 0.25);
+ box-shadow: 0px 0.0375em 0.125em 0px rgba(0, 0, 0, 0.05);
+
+
+  border-radius: 20px;
+}
+.modal-body::-webkit-scrollbar-thumb:hover{
+	 background: #ee4c2c;
+	/*background-color: rgba(97,95,95,1);*/
+   
+	 border-radius: 20px;
+   }
+   
+
+.modal-container p.description{
+	font-size: 1vw;
+  color: black;
+  text-align: justify;
+  margin-bottom: 5%;
+  padding: 0 8%;
+  /*margin-bottom: 6%;*/
+
+}
+
+
+h2.sectionTitel{
+	text-align: center;
+	font-size: 1.9vw;
+}
+h3.displayTitel{
+
+	
+	margin-bottom: 0px;
+	
+	font-size: 1.3vw;
+  color: black;
+  margin-top: 0;
+  padding-left: 8%;
+  white-space: nowrap;
+
+}
+h3.displayTitel.relativeButton{
+	display: inline-block;
+	position: relative;
+	top: 1.7vw;
+}
+
+
+.close-div{
+	margin-right: 5PX;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  color:rgb(71,69,69);
+  font-size: 1.9rem;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  margin-right: 3px;
+  color: orangered;
+}
+.close-div:hover{
+	color: black;
+}
+
+.overlay{
+
+ position: fixed;
+ z-index: 10;
+ opacity: 0;  /*au moment ou on lui donne une opacité il capte les mouses events a la place de ce qu'il y a desoous*/
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background-color: rgb(249, 248, 253,0.6);
+ transition: 500ms ease-in-out;
+ pointer-events: none;  /* pour l'opacité !*/
+}
+.overlay.active{
+	cursor: pointer;
+  opacity: 10;
+  pointer-events: all;
+  background-color: rgba(0,0,0,0.4); 
+  backdrop-filter: blur(5px);
+}
+
+
+/*/////CSS pour le modal-body composé du fixed-sidebar et du content-wrapper ///////*/
+
+
+/*.fixed-sidebar{
+  width: 20%;
+  height: 90%;
+  position: absolute;
+}
+*/
+/*
+.content-wrapper{
+   margin-left: 22%;
+} */
+
+/*
+.tablink{
+  word-wrap: break-word;
+  display: block;
+  height: 8%;
+  width: 100%;
+  background-color: teal;
+
+}
+*/
+
+/*display content et toggle de unClicked*/
+
+/*
+.displayContent{
+  display: block;
+}
+.displayContent.unClicked{
+  display: none; // par default tout est mis avec la classe unclicked dans le html sauf le id = defaultDisplay...
+}
+
+*/
+.images.rowImages{
+	padding: 0;
+}
+
+.images {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 5%;
+
+}
+
+
+.images img{
+	border-radius: 20%;
+	padding: 2%;
+	width: 16%;
+
+	
+}
+
+.filter_viz img{
+	border-radius: 20%;
+	margin-top: 2%;
+	padding: 2%;
+	width: 30%;
+
+}
+
+.images.cropImages img{
+	border-radius: 0px;
+	padding: 2%;
+	width: 12%; 
+	height: auto;
+	object-fit: contain;
+	
+	
+}
+
+.blockImages{
+	margin-bottom: 10%;
+	padding: 0 5%;
+}
+
+/* ################################# 2 COLS ################################# */
+.firstColumn {
+  /*margin-top: 3.5%; */
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: auto;
+  
+  align-items: center;
+  float: left;
+  width: 30%;
+}
+
+.secondColumn {
+	
+	float: left;
+	width: 70%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+  
+  }
+.exploreTitel{
+width: 100%;
+}
+
+svg.bezier{
+	height: 80%;
+	width: 100%;
+}
+
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.swiper-container {
+  /* see HTML !*/
+}
+
+.main_wrapper {
+  width: 100%;
+  margin: 0 auto;
+}
+
+
+
+/* ######################################################################## */
+/* ######################################################################## */
+/* ############################# GIANNI ################################### */
+/* ######################################################################## */
+/* ######################################################################## */
+/*
+* { /* pour moi c'est mortel ...
+  margin: 0;
+  padding: 0;
+  box-sizing:border-box; 
+}
+*/
+html, body {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+body {
+	font-family: "Open Sans", Arial, sans-serif;
+	font-size: 1.1rem; /*25px;*/ /*1.1rem*/
+  margin: 0;
+  padding:0;
+  /*background: #004882;*/
+}
+
+
+h1 { /* pour moi c'est mortel ... faut rajouter une classe gianni a chaque h1 et mettre h1.gianni*/
+  font-size: 2rem;
+  /*height: 50vh;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* ################################# HEADER ##################################*/
+	#header {
+		background-color: #fff;
+		border-bottom: solid 1px rgba(144, 144, 144, 0.25);
+		box-shadow: 0px 0.0375em 0.125em 0px rgba(0, 0, 0, 0.05);
+		color: #484848;
+		cursor: default;
+		font-size: 1.25em;
+		height: 4.5em;
+		left: 0;
+		line-height: 4.4em;
+		position: fixed;
+		text-transform: uppercase;
+		top: 0;
+		width: 100%;
+		z-index: 3;
+		
+	}
+
+		#header h1 {
+			color: #000000; /*#484848;*/
+      font-size: 1.25em;
+			font-weight: 100;
+			height: inherit;
+			left: 1.25em;
+			line-height: inherit;
+			margin: 0;
+			padding: 0;
+			position: absolute;
+			top: 0;
+		}
+
+		#header nav {
+			height: inherit;
+			line-height: inherit;
+			position: absolute;
+			right: 1.25em;
+			top: 0;
+			vertical-align: middle;
+		}
+
+			#header nav ul {
+				list-style: none;
+				margin: 0;
+				padding-left: 0;
+			}
+
+				#header nav ul li {
+					border-radius: 4px;
+					display: inline-block;
+					margin-left: 2.5em;
+					padding-left: 0;
+				}
+
+					#header nav ul li a {
+						-moz-transition: color 0.2s ease-in-out;
+						-webkit-transition: color 0.2s ease-in-out;
+						-ms-transition: color 0.2s ease-in-out;
+						transition: color 0.2s ease-in-out;
+						color: #666; /*HERE: color of navigation buttons*/
+						display: inline-block;
+						text-decoration: none;
+					}
+
+						#header nav ul li a:hover {
+							color: #ee4c2c; /*HERE: nav change colors when mouse over*/
+						}
+
+					#header nav ul li:first-child {
+						margin-left: 0;
+					}
+
+					#header nav ul li .button {
+						border-color: rgba(144, 144, 144, 0.25);
+						box-shadow: none;
+						height: 3em;
+						line-height: 2.9em;
+						margin-bottom: 0;
+						padding: 0 1.5em;
+						position: relative;
+						top: -0.075em;
+						vertical-align: middle;
+					}
+
+
+/* HEADER HOME PAGE */
+		#header .container {
+			position: relative;
+		}
+
+			#header .container h1 {
+				left: 0;
+			}
+
+			#header .container nav {
+				right: 0;
+			}
+
+		#header.alt {
+			background-color: transparent;
+			border: 0;
+			box-shadow: none;
+			height: 3.25em;
+			line-height: 3.25em;
+			position: absolute;
+		}
+
+			#header.alt h1 {
+				color: #000000;
+				left: 2.5em;
+				top: 2em;
+			}
+
+				#header.alt h1 a {
+					color: #dc143c; /*#FFF;*/ /*HERE: EPFL link in read HOME header*/
+				}
+
+			#header.alt nav {
+				right: 2em;
+				top: 2em;
+			}
+
+				#header.alt nav a {
+					color: #000; /*ddd*/ /*HERE COLOR BUTTON HEADER HOME*/
+				}
+
+					#header.alt nav a:active, #header.alt nav a:hover {
+						color: #ee4c2c; /*#FFF;*/
+					}
+
+			#header.alt .button {
+				border-color: rgba(255, 255, 255, 0.5);
+				color: #ffffff !important;
+			}
+
+		@media screen and (max-width: 980px) {
+
+			#header {
+				display: none;
+			}
+
+		}
+
+
+#header img {
+ height: 30px;
+}
+
+
+/* ################################# FOOTER ################################# */
+
+#footer {
+padding: 8em 0 6em 0;
+background: #f6f6f6;
+color: #aaa;
+text-align: center;
+}
+
+#footer a {
+	-moz-transition: color 0.2s ease-in-out;
+	-webkit-transition: color 0.2s ease-in-out;
+	-ms-transition: color 0.2s ease-in-out;
+	transition: color 0.2s ease-in-out;
+	color: #aaa;
+	text-decoration: none;
+}
+
+#footer a:active, #footer a:hover {
+color: #666;
+}
+
+#footer .icons {
+font-size: 1.5em;
+}
+
+#footer .icons li {
+padding-right: 2.5em;
+}
+
+#footer .icons li:last-child {
+	padding-right: 0;
+}
+
+#footer .copyright {
+margin: 2em 0;
+padding: 0;
+text-align: center;
+}
+
+#footer .copyright li {
+border-left: solid 1px rgba(144, 144, 144, 0.25);
+display: inline-block;
+list-style: none;
+margin-left: 1.5em;
+padding-left: 1.5em;
+}
+
+#footer .copyright li:first-child {
+	border-left: 0;
+	margin-left: 0;
+	padding-left: 0;
+}
+
+@media screen and (max-width: 980px) {
+
+	#footer {
+		padding: 6em 0 4em 0;
+	}
+
+}
+
+@media screen and (max-width: 736px) {
+
+	#footer {
+		padding: 3em 0 2em 0;
+	}
+
+		#footer .icons {
+			font-size: 1em;
+		}
+
+}
+
+@media screen and (max-width: 480px) {
+
+	#footer {
+		padding: 3em 0 1em 0;
+	}
+
+		#footer .copyright li {
+			border-left: 0;
+			display: block;
+			margin: 0;
+			padding: 0;
+		}
+
 }

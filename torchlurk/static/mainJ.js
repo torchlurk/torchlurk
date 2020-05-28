@@ -1,32 +1,20 @@
-var json_path = (function () {
-      var json = null;
-      $.ajax({
-                'async': false,
-                'global': false,
-                'url': "/saved_model/.current.json",
-                'dataType': "json",
-                'success': function (data) {
-                              json = data;
-                          }
-            });
-      return json.current_json;
-})(); 
-console.log("LOADING",json_path)
 
-console.log("SUCCESSAAA");
-/* SELECTION OF "ALL" THE HTML ELEMENTS*/
+
+
+
+/****  SELECTION OF "ALL" THE HTML ELEMENTS******/
 let titelFilter = document.querySelector(".titel-filter");
 
 let gridContainer = document.querySelector(".grid-container");
 
 let closeX = document.querySelector(".close-div");
 let modalContainer = document.querySelector(".modal-container");
+let modalBody = document.querySelector(".modal-body");
 let contentWrapper = document.querySelector(".content-wrapper");
 
 let favImgsDivFirst = document.querySelector(".avg_imgs-firstRow");
 let favImgsDivSecond = document.querySelector(".avg_imgs-secondRow");
 
-let modalBody = document.querySelector(".modal-body");
 let gradPathAvgDivFirst = document.querySelector(".avg_imgs_grad-firstRow");
 let gradPathAvgDivSecond = document.querySelector(".avg_imgs_grad-secondRow");
 
@@ -50,94 +38,103 @@ let maxCatHistogram = document.querySelector(".maxCatHistogram");
 let maxHistogram = document.querySelector(".maxHistogram");
 
 let overlay = document.querySelector(".overlay");
-/*function displayContent(displayClassName){ //appele depuis HTML
-let selectedDisplay = document.querySelector("."+ displayClassName);
-selectedDisplay.classList.toggle("unClicked");
-} */
+
+
+
+
+/************ JS CODE FOR SVG PART ***************/
+// for the svg we can only hover and click on Convs_layers
+let convs = [0,2,5,7,10,12,14,17,19,21,24,26,28];
+let tspans = document.querySelectorAll(".bezier tspan"); 
+let convTexts = [] // va contenir tous les texts du svg qui sont des Conv_
+tspans.forEach( el => {
+  let layerId = parseInt((el.parentElement.dataset.layerId));
+  if(convs.includes(layerId)){
+    convTexts.push(el.parentElement);
+  }
+});
+
+/* In the HTML all <text> corresponding to a conv_ layer have the attribute ONMOUSEOVER*/
+function onHover(el){
+  el.style.cursor = "pointer";
+  layerId = el.dataset.layerId; 
+  // choppe le rectangle correspondant!!
+  let correspRect = $(`*[data-layer-id = ${layerId}]`)[0];
+  correspRect.style.fill="rgba(238,76,44,0.1)"; 
+}
+
+/* In the HTML all <text> corresponding to a conv_ layer have the attribute ONMOUSEOUT*/
+function outHover(el){
+  layerId = el.dataset.layerId; 
+  // choppe le rectangle correspondant! et si la couleur est rouge, Ca la laisse ( car clicked)
+  let correspRect = $(`*[data-layer-id = ${layerId}]`)[0];
+  if(!correspRect.classList.contains("actif") ){
+  correspRect.style.fill="white"; 
+  } 
+  }
+
+/* In the HTML all <text> corresponding to a conv_ layer have the attribute ONCLICK*/
+/* on click we put the rectangle to red, erase the gridContainer and redraw*/
+  function onSvgClick(el){
+    // permet de tout mettre tous les texts COnvs (ou pluto les rects correspondant) à inactif et white !!
+    convTexts.forEach(convText => {
+      let layerId = parseInt(convText.dataset.layerId);
+    // choppe le rectangle correspondant
+      $(`*[data-layer-id = ${layerId}]`)[0].classList.remove("actif");
+      $(`*[data-layer-id = ${layerId}]`)[0].style.fill = "white";
+  });
+
+    // ensuite le text clické (le rectangle correspondant)ce met actif et rouge
+    let layerId = parseInt(el.dataset.layerId);
+    $(`*[data-layer-id = ${layerId}]`)[0].style.fill = "rgba(238,76,44,0.1)"; //red
+    $(`*[data-layer-id = ${layerId}]`)[0].classList.add("actif");
+
+    // on efface le gridContainer + titre et on redessine
+    gridContainer.innerHTML = "";
+    titelFilter.innerHTML = "";
+    drawGridContainer(layerId);
+  }
+
+/************ JS CODE FOR SVG PART END***************/
+
+
+
 
 /* ONCE THE SWIPER IS LOADED, THE JSON IS STORED IN THE VARIABLE jsonData FOR FUTURE USE*/
 let jsonData = [];
-////1: creation of the swiper with the corresponding layers////
-$.getJSON(json_path,function(json_state) {
-      jsonData = json_state.infos;
+let json1 = [];
+let json2 = [];
+let json_concat = [];
 
-      console.log("json charge");
-      console.log(jsonData);
-    let arrayOfSlidesToAppend = [];
-    for(layer of jsonData){
-      console.log("layer",layer);
-      if (layer.hasOwnProperty('filters')){
-          let slide = `<div class="swiper-slide" data-swiper-slide-index="${layer.id}" style="background-image: url(${layer.filters[0].filter_viz})">
-                              <div class="slide-layer-up">
-                                  <h3 class="layer-name">${layer.name}</h3>
-                              </div>
-                              <div class="slide-layer-down">
-                                  <p class="layer-description">number of filters: ${layer.n_output}</p>
-                              </div>
-                          </div> `;
-          arrayOfSlidesToAppend.push(slide);
-      }
-    }
-    mySwiper.appendSlide(arrayOfSlidesToAppend);
-    //mySwiper.pagination.update();
-    //mySwiper.scrollbar.updateSize();
-    mySwiper.update() // Mandatory to update the swiper after adding/removing slides
-    //add events to the slides -> mySwiper.on(event,handler);
-    mySwiper.on("doubleTap",function(e){
-    if(e.target.className.includes("swiper-slide")){
-      //it means that it is the slide and not the container which is clicked
-      let layerIdString = e.target.dataset.swiperSlideIndex;
-      let layerId = parseInt(layerIdString);
-      gridContainer.innerHTML = "";
-      titelFilter.innerHTML = "";
-      if(jsonData[layerId].filters != undefined){ // condition for RELU layers
-      drawGridContainer(layerId);
-      }
-
-    } else{
-      return;
-    }
-    });
+$.getJSON("../vgg16_imagenet_1.json", function(jsono) {
+  json1 = jsono;
+  $.getJSON("../vgg16_imagenet_2.json", function(json) {
+    json2 = json
+    json_concat = json1.concat(json2);
+    console.log("coucou")
+    console.log(json_concat)
+    jsonData = json_concat;
+    console.log(jsonData)
+    console.log("json charge");
     document.querySelector(".gifLogo").remove();
-
-});// end of get Json for swiper 
-
-//fresh_json();
-//setInterval(fresh_json,8000);
-
-function fresh_json(){$.getJSON(json_path,
-  function(json_state) {
-    console.log("FUCK");
-    console.log("start refresh")
-    console.log(json_state['state']);
-    //console.log(json_state['infos'][0]['filters'][0]['avg_imgs'][0])
-    state = json_state['state']
-    if(state == 'idle'){
-          $('#indicator').css('background-color', 'green');
-    }else if (state == 'compute_top'){
-          $('#indicator').css('background-color', 'red');
-    }else if (state == 'compute_activ'){
-          $('#indicator').css('background-color', 'orange');
-    }else if (state == 'compute_grad'){
-          $('#indicator').css('background-color', 'purple');
-    }
-    $('#indicator').html("<p>"+state+"</p>");
-    jsonData = json_state.infos
-    for(layer of jsonData){
-      if(layer.filters != undefined){ // condition for RELU layers
-        drawGridContainer(parseInt(layer.id));
-      }
-    }
-    console.log("end refresh");
-  })
-};
-
+ 
+  ///////**** ALL THE JS CODE IS WITHIN THE GETJSON */
+  
+  });
+});
 
 /* drawGridContainer draws the grid of squares (each unit of the chosed layer).
 each unit has a data-layer-ID and data-filter-Id attribute*/
 let clickNumber = 0;
 function drawGridContainer(layerId){
-  titelFilter.innerHTML ="choose your filter";
+  let isundef = jsonData[layerId];
+  if( isundef == undefined || isundef == null ){ 
+    console.log("je suis pas Pret...");
+  return;}
+  else{
+  titelFilter.innerHTML ="Choose your Filter";
+
+  console.log(jsonData[layerId]);
   let filters = jsonData[layerId].filters;
   let filterNumber = filters.length;
   let colRowNumber = Math.ceil(Math.sqrt(filterNumber));
@@ -146,27 +143,32 @@ function drawGridContainer(layerId){
   //gridContainer.style.gridTemplateRows = `repeat(${colRowNumber}, ${a/colRowNumber}px)`;
   let i = 0; // compteur pour n'avoir que 64 units
   filters.forEach(filter => {
-    if( i < 64){ 
+    if( i < 64){
   let gridItem = document.createElement("div");
   gridItem.classList.add("griditem");
   gridItem.setAttribute("data-layer-id",`${layerId}`);
   gridItem.setAttribute("data-filter-id",`${filter.id}`);
+  /*gridItem.setAttribute("clickNumber", clickNumber ); // to prevent double click...*/
+
+
   gridItem.innerHTML = `<span class="unitNumber" data-layer-id = "${layerId}" data-filter-id = "${filter.id}" >unit ${filter.id}</span>`;
-  gridItem.style.backgroundImage = `url(../${filter.filter_viz})`; // met les filter_VIZ !
+  gridItem.style.backgroundImage = `url(.${filter.filter_viz})`; // met les filter_VIZ !
   gridContainer.appendChild(gridItem);
   }
   i += 1;
   });
-  }
+
+  }// end of else
+  }// end of function
+
 
   /*modalAppearance creates the popup by using the fuction called "createModal" and then scale the popUp from 0 to 1
   it is used as a callback fuction for the ONCLICK EVENT*/
   let modalAppearance = function(e){
-    console.log("CALL MODALAPPEARANCE");
     let layerId = parseInt(e.target.dataset.layerId);
     let filterId = parseInt(e.target.dataset.filterId);
     if((filterId == undefined || isNaN(filterId)) || (layerId == undefined || isNaN(layerId))){
-      console.log("apuie sur un carré connard, pas entre deux...");
+      console.log("apuie sur un carré, pas entre deux...");
       return;
     } else{
       clickNumber += 1;
@@ -182,8 +184,6 @@ function drawGridContainer(layerId){
       /* setTimeout(function(){ document.querySelector(".defaultButton").click(); }, 400); */ // so that the first histogram can be seen :)))
 
       }
-       modalContainer.classList.add("active"); //scale from 0 to 1
-       overlay.classList.add("active");
     }
   }
 // ONCLICK EVENT
@@ -194,7 +194,6 @@ gridContainer.addEventListener("dblclick", function(e){
 
 
 // la fct createModal crée la popUp en lui donnant comme attribut les data-layerId et data-filterId du carré clické et rajoute un titre ,une description,les images et les histos
-
 function createModal(layerId,filterId){
   console.log(jsonData[layerId])
   let filter = jsonData[layerId].filters[filterId];
@@ -535,6 +534,55 @@ let descrs = document.querySelectorAll(".description")
 descrs.forEach( el => el.innerHTML = "lorem industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.");
 } // end of create modal !!
 
+
+
+/******** function to DIsplay NONE */
+let listOfSections = [];
+listOfSections.push(document.querySelector("#avg_imgs-display"));
+listOfSections.push(document.querySelector("#max_imgs-display"));
+listOfSections.push(document.querySelector("#actmax_img-display"));
+
+function myFunction(thisButton,targetId){
+  listOfSections.forEach(el => {
+    el.classList.add("hidden");
+  });
+  console.log(document.querySelector(`#${targetId}`));
+ /* thisButton.style.backgroudColor = "rgba(238,76,44,0.1)";
+  thisButton.style.border = "2px solid rgba(238, 76, 44, 0.6)";*/
+  let buttons = document.querySelectorAll("button.popUp");
+  buttons.forEach( el =>{
+    el.classList.remove("active");
+  });
+  thisButton.classList.add("active");
+ 
+  let targetDisplay = document.querySelector(`#${targetId}`);
+  targetDisplay.classList.remove("hidden");
+  modalBody.scrollTo(0,0);
+  
+  drawForEffect();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* fonction qui supprime l'intérieur du popUp avant qu'il ne se ferme */
 
 closeX.addEventListener("click",function(){
@@ -542,14 +590,15 @@ closeX.addEventListener("click",function(){
   modalContainer.classList.remove("active");
   overlay.classList.remove("active");
  });
+
  overlay.addEventListener("click",function(){
   eraseModal();
   modalContainer.classList.remove("active");
   overlay.classList.remove("active");
  });
+ 
 
 function eraseModal(){
-  console.log("Erase!");
   clickNumber = 0;
   modalContainer.setAttribute("data-layer-id","");
   modalContainer.setAttribute("data-filter-id","");
@@ -563,6 +612,9 @@ function eraseModal(){
 }
 
 
+
+/* fonction qui dessine un histo. il faut lui donner la width du svg , le retard, l'effet et un OBJET(CAT/SPIKES) OU UN ARRAY(SPIKES)*/
+// on pourra jouer sur la Height du graph fixée ici a 500, et les margins + text-size
 function drawHistos(CanvasClassName,ArraySpikesOrCategObj,svgWidth = 500, duration = 1000,delay = 1000, svgHeight = 400,categNumber = 10){
   let rotate = 0;
   let textAnchor;
@@ -590,6 +642,7 @@ function drawHistos(CanvasClassName,ArraySpikesOrCategObj,svgWidth = 500, durati
   }
 
   let dataArray0 = dataArray.map(el=> {if (el <= 0) {return 0;}else{return parseFloat(el.toFixed(2));}});
+  console.log(dataArray0);
   let htmlCanvas = document.querySelector("."+CanvasClassName);
 
   //htmlCanvas.innerHTML ="";
@@ -646,10 +699,12 @@ function drawHistos(CanvasClassName,ArraySpikesOrCategObj,svgWidth = 500, durati
                               .attr("text-anchor", textAnchor);
   }
 
-
   window.addEventListener("resize",function(e){
     //on resize all the histograms have to be redrawn
-    if(modalContainer.getBoundingClientRect().width =!0){
+    console.log(modalContainer.getBoundingClientRect().width);
+    if(modalContainer.getBoundingClientRect().width == 0){
+    console.log("modal is 0 in width");
+    }else{
     let windowWidth = document.body.clientWidth;
     let layerId = parseInt(modalContainer.dataset.layerId);
     let filterId = parseInt(modalContainer.dataset.filterId);
@@ -661,19 +716,17 @@ function drawHistos(CanvasClassName,ArraySpikesOrCategObj,svgWidth = 500, durati
     favHistogram.innerHTML = "";
     maxCatHistogram.innerHTML ="";
     maxHistogram.innerHTML ="";
-    
     let modalWidth = modalContainer.clientWidth;
     let modalHeight = modalContainer.clientHeight;
+    drawHistos("favCatHistogram",filter.histo_counts_avg,modalWidth*0.8, 0,0,modalHeight*0.6 );
+    drawHistos("favHistogram",filter.avg_spikes,modalWidth*0.8,0,0, modalHeight*0.6);
+    drawHistos("maxCatHistogram",filter.histo_counts_max,modalWidth*0.8,0,0,modalHeight*0.6 );
+    drawHistos("maxHistogram",filter.max_spikes, modalWidth*0.8,0,0, modalHeight*0.6);
 
-    drawHistos("favCatHistogram",filter.histo_counts_avg,modalWidth*0.8, 1000,0,modalHeight*0.6 );
-    drawHistos("favHistogram",filter.avg_spikes,modalWidth*0.8,1000,0, modalHeight*0.6);
-    drawHistos("maxCatHistogram",filter.histo_counts_max,modalWidth*0.8,1000,0,modalHeight*0.6 );
-    drawHistos("maxHistogram",filter.max_spikes, modalWidth*0.8,1000,0, modalHeight*0.6);
-    
-    
+
+      console.log("resize");
     }
     });
-    
 
     function drawForEffect(){
       //on resize all the histograms have to be redrawn
@@ -684,6 +737,7 @@ function drawHistos(CanvasClassName,ArraySpikesOrCategObj,svgWidth = 500, durati
       //let windowWidth = document.body.clientWidth;
       let modalWidth = modalContainer.clientWidth;
       let modalHeight = modalContainer.clientHeight;
+      console.log(modalHeight);
       let layerId = parseInt(modalContainer.dataset.layerId);
       let filterId = parseInt(modalContainer.dataset.filterId);
       let filter = jsonData[layerId].filters[filterId];
@@ -693,38 +747,10 @@ function drawHistos(CanvasClassName,ArraySpikesOrCategObj,svgWidth = 500, durati
       maxCatHistogram.innerHTML ="";
       maxHistogram.innerHTML ="";
   
-      //replacement done!
         drawHistos("favCatHistogram",filter.histo_counts_avg,modalWidth*0.8, 1000,0,modalHeight*0.6 );
         drawHistos("favHistogram",filter.avg_spikes,modalWidth*0.8,1000,0, modalHeight*0.6);
         drawHistos("maxCatHistogram",filter.histo_counts_max,modalWidth*0.8,1000,0,modalHeight*0.6 );
         drawHistos("maxHistogram",filter.max_spikes, modalWidth*0.8,1000,0, modalHeight*0.6);
+  
       }
       }
-/******** function to DIsplay NONE */
-let listOfSections = [];
-listOfSections.push(document.querySelector("#avg_imgs-display"));
-listOfSections.push(document.querySelector("#max_imgs-display"));
-listOfSections.push(document.querySelector("#actmax_img-display"));
-function myFunction(thisButton,targetId){
-  console.log("ici?",listOfSections);
-  listOfSections.forEach(el => {
-    el.classList.add("hidden");
-  });
-  console.log("dlamerde",document.querySelector(`#${targetId}`));
- /* thisButton.style.backgroudColor = "rgba(238,76,44,0.1)";
-  thisButton.style.border = "2px solid rgba(238, 76, 44, 0.6)";*/
-  let buttons = document.querySelectorAll("button.popUp");
-  buttons.forEach( el =>{
-    el.classList.remove("active");
-  });
-  thisButton.classList.add("active");
- 
-  let targetDisplay = document.querySelector(`#${targetId}`);
-  
-  targetDisplay.classList.remove("hidden");
-  modalBody.scrollTo(0,0);
-  
- // drawForEffect();
-
-}
-
