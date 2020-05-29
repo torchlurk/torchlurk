@@ -25,11 +25,11 @@
 <h2 align="center"> Introduction </h2>
 CNNs do a great job at recognizing images (when appropriately trained).
 
-Problems arrive when it comes to interpret the network: although one coded the network in question, and one knows all the tips and tricks necessary to train it efficiently, one might ignore **how** it generates the output from a given image.
+Problems arise when it comes to interpret the network: although one coded the network in question, and one knows all the tips and tricks necessary to train it efficiently, one might ignore **how** it generates the output from a given image.
 
 Torchlurk aims at helping the user in that sense: it provides an interface to visualize a Pytorch network in an efficient yet simple manner, similarly to [Microscope](https://microscope.openai.com/models/alexnet/conv5_1_0).
 
-All you need is the trained pytorch network and its training set. That's it.
+All you need is the trained Pytorch network and its training set. That's it.
 
 <h2 align="center">  Installation &#9749 </h2>
 Torchlurk is available on pip! Just run:
@@ -37,10 +37,12 @@ Torchlurk is available on pip! Just run:
     pip install torchlurk
 
 <h2 align="center"> Overview &#9757</h2>
-<img alt="demo gif" src="imgs/demo.gif" style="display:block;margin-left:auto;margin-right:auto;width:70%">
+<img alt="demo gif" src="imgs/demo.gif" style="display:block;margin-left:auto;margin-right:auto;width:70%" align="center">
+<br>
 
 <h2 align="center"> Documentation &#128218</h2>
 Torchlurk has <a href="aadsfasf"> an online documentation </a> which gets regularly updated.
+<br>
 
 <h2 align="center"> Quick Start &#8987</h2>
 
@@ -56,7 +58,7 @@ Your training set should follow the following structure in order for the lurker 
     │   │   ├── class2id_1.jpg
     │   │   ├── class2id_2.jpg
     │   │   ├── ...
-    │    ├── ...
+    │   ├── ...
 
 ### 1. Instanciation
 
