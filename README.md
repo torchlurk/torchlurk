@@ -1,107 +1,194 @@
-# Project of Data Visualization (COM-480)
-# Torchlurk
-Developping a front-end focused library aiming at making visualization of pytorch CNN easier, more accessible and more intuitive.
 
-| Student's name | SCIPER |
-| -------------- | ------ |
-| Yann Mentha    | 252256 |
-| Gianni Guisto  | 251795 |
-| Julien Berger  | 247179 |
-
-[Milestone 1](#milestone-1-friday-3rd-april-5pm) • [Milestone 2](#milestone-2-friday-1st-may-5pm) • [Milestone 3](#milestone-3-thursday-28th-may-5pm)
-
-_____
-## Milestone 1 (Friday 3rd April, 5pm)
-
-**10% of the final grade**
-
-### Abstract
-
-In the past recent years, Convolutional Neural Networks (CNN) have shown impressive capabilities in image recognition tasks even outperforming humans. Despite undeniable success in all field of science, one can wonder why do these processing paradigms perform so well. Indeed, complexity increases along with the number of layers and internal computation lack of transparency for the user.
-
-This project aims to develop a visualization tool to ease the interpretation of trained CNN and give insights to the user about what the network is actually learning. The name `Torch-` refers to the use of the PyTorch framework and `-lurk` to our willingness to unveil the intrinsic abstraction levels that are _'hidden'_ in these CNNs.
-
-### Motivation
-PyTorch is one of the most used deep learing framework and it just keeps getting more and more popular. Nevertheless, we feel like it lacks practical visual tool associated to it to get insights about network structure. We believe that is a great opportunity to develop such a tool as part of this course as it combines _utility_ to _visualization_.
-
-### Approach
-#### Backend
-The `backend` insures that the data is properly formated so that it can be used interactively in the frontend. Analysis involving images computation are carried out using Python and the PyTorch framework. For now, we use networks such as _VGG16_ pretrained on the ImageNet dataset. We also make use of existing PyTorch CNN visualization libraries that enable to display _gradient_ and _filters_ (see [here](https://github.com/utkuozbulak/pytorch-cnn-visualizations)). Best responding images and filters are saved into _JSON_ file format.
+<p align="center">
+<img src="imgs/main_title.png"alt="Title icon" width="500"/>
+</p>
+<p align = "center">
+   <a href="">
+      <img alt="forks" src="https://img.shields.io/github/stars/torchlurk/torchlurk.github.io">
+   </a>
+   <a href="">
+      <img alt="forks" src="https://img.shields.io/github/forks/torchlurk/torchlurk.github.io?color=red">
+      </a>
+   <a href="">
+      <img alt="pip downloads" src="https://img.shields.io/badge/pypi-v1.0.1-informational">
+   </a>
 
 
-#### Frontend
-The goal of the `frontend` is to provide a user-friendly and intuitive interface to navigate through the network and analyse its internal states. It will enable the user to navigate through layers and examine it. An example of application we wish to offer (non-exhaustive list which may change according to the progress of the project): 
-* visualize the structure of the network
-* display most significant images activating a given neuron
-* from a feature map, we want to project back the feature map thanks to deconvolution in order to isolate the pixel(s) responsible for the given activation
+   <a href="https://opensource.org/licenses/MIT">
+      <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-green.svg">
+   </a>
+   <a href="htnses/MIT">
+      <img alt="python_version" src="https://img.shields.io/badge/python-v3.6+-blue.svg">
+   </a>
+</p>
 
-Network dynamical visualization are done using JavaScript and the library `D3.js`. To grasp the idea of our project, you are invited to open the HTML file `test.html` with the command (when no instance of chrome is already running):
+<h2 align="center"> Introduction </h2>
+CNNs do a great job at recognizing images (when appropriately trained).
 
+Problems arise when it comes to interpret the network: although one coded the network in question and knows all the tips and tricks necessary to train it efficiently, one might ignore **how** it generates the output from a given image.
+
+Torchlurk aims at helping the user in that sense: it provides an interface to visualize a Pytorch network in an efficient yet simple manner, similarly to [Microscope](https://microscope.openai.com/models/alexnet/conv5_1_0).
+
+All you need is the trained Pytorch network and its training set. That's it.
+
+<h2 align="center">  Installation &#9749 </h2>
+Torchlurk is available on pip! Just run:
+
+    pip install torchlurk
+
+<h2 align="center"> Overview &#9757</h2>
+<p align="center">
+   <img alt="demo gif" src="imgs/demo.gif" style="display:block;margin-left:auto;margin-right:auto;width:70%">
+</p>   
+   
+<br>
+
+<h2 align="center"> Documentation &#128218</h2>
+Torchlurk has an <a href="aadsfasf">online documentation</a> which gets regularly updated.
+
+<br>
+
+<h2 align="center"> Quick Start &#8987</h2>
+
+Your training set should follow the following structure in order for the lurker to load properly your datas:
+
+    .
+    ├── src                  
+    │   ├── name_class1
+    │   │   ├── class1id_1.jpg
+    │   │   ├── class1id_2.jpg
+    │   │   ├── ...
+    │   ├── name_class2
+    │   │   ├── class2id_1.jpg
+    │   │   ├── class2id_2.jpg
+    │   │   ├── ...
+    │   ├── ...
+
+<br>
+
+### 1. Instanciation
+
+```python 
+import torchlurk
+import torch
+
+# load the trained model
+your_model = ModelClass() 
+your_model.load_state_dict(torch.load(PATH))
+
+# the preprocess used for the training
+preprocess = transforms.Compose(...)
+
+# and instanciate a lurker
+lurker = Lurk(your_model,
+          preprocess,
+          save_gen_imgs_dir='save/dir',
+          save_json_path='save/dir',
+          imgs_src_dir=".source/dir",
+          side_size=224)
 ```
-google-chrome --allow-file-access-from-files test.html
+
+<br>
+
+### 2. Layer Visualization
+
+The layer visualization is an artificial image generated by gradient descent which aims at maximizing the acivation of a given filter: this gives useful insights on the type of texture/colors the filter in question is looking at in inputs images.
+
+```python
+# compute the layer visualisation for a given set of layers/filters
+lurker.compute_layer_viz(layer_indx = 12,filter_indexes=[7])
+# OR compute it for the whole network
+lurker.compute_viz()
+# plot the filters
+lurker.plot_filter_viz(layer_indx=12,filt_indx=7)
 ```
 
-### Road to Milestone 2
-We provide here a working beta version to show the direction we are taking in this project. By milestone 2, we will in particular:
-* display network architecture
-* include more network architectures
-* improve the HTML visually and make it intuitive
-* use deconvolution to project back the output to the input
+<p align="center">
+  <img src="./imgs/filt_viz.png" width=500>
+</p>
 
-### References
-M. D. Zeiler and R. Fergus, _Visualizing and Understanding Convolutional Networks_. In _arXiv:1311.2901_, 2013. Available: https://arxiv.org/abs/1311.2901
+<br>
 
-
-_____
-## Milestone 2 (Friday 1st May, 5pm)
-
-**10% of the final grade**
+### 3. Max Activation
+The max activation represents the top N images activating a given filter the most in terms of average or max score.
 
 
+```python
+#compute the top activation images
+lurker.compute_top_imgs(compute_max=True,compute_avg=True)
+# plot them
+lurker.plot_top("avg",layer_indx=12,filt_indx=7)
+```
+<p align="center">
+  <img src="./imgs/plot_top.png" width=3000>
+</p>
 
-_____
-## Milestone 3 (Thursday 28th May, 5pm)
+<br>
 
-**80% of the final grade**
+#### 3.1 Deconvolution
+<p align="center">
+  <img src="./imgs/deconv.png">
+</p>
 
-_____
-## Structure of the project
-### Directories
-`documentation` : where to put relevant articles/sources for the project<br>
-`lib`: useful git repositories for the project<br>
-`results`: directory where we store generated images for multiple runs<br>
-`src`: for the source code (frontend) i.e. main.html, main.css and main.js<br>
-`saved_model`: directory where we keep the json structure of each layers/filters for a given NN<br>
-`data`: data directory<br>
--- `tinyimagenet`: subset of imageNet(10 img per class, 1000 classes)<br>
--- `exsmallimagenet`: subset of tinyimagenet ( variables img and classes) <br>
-`src`: source code <br>
--- `Torchlurk.ipynb`: backend code
--- `main.css,main.html,main.js`:frontend interface
+```python
+# plot the max activating images along with their cropped areas
+lurker.plot_crop(layer_indx=2,filt_indx=15)
+```
+<p align="center">
+  <img src="./imgs/deconv_imgs.png">
+</p>
 
-# Explanation of the structure of the results folder
-For each filter the top4_avg (top 4 of the images of the tinyimagenet dataset that lead to the highest average output) and top4_max are stored in the json (they just reference the image in the tinyimagenet/exsmallimagenet folder.
-## avg_grads
-The gradients of the top4_avg of each filter with respect to that filter.
+<br>
 
-## max_grads
-Equivalent of avg_grads for top4_avg with respect to top4_max
+### 4. Gradients
 
-## cropped
-for each image in the top4_max (the image of the tinyimagenet that managed to enhance the highest scalar score for the given filter), there is a region in the original image that lead to that pixel with highest scalar value. the cropped folder keep this cropped version of the top4_max images.
+Guided GRAD CAM is another way to check what a given filter is looking at: it relies in particular in isolating a specific location in the image that excites our neurons. For more information, check [this article](https://medium.com/@ninads79shukla/gradcam-73a752d368be).
 
-## cropped_grad
-this same cropping is applied to the gradients of top4_max
+```python
+#compute the gradients
+lurker.compute_grads()
+# plot them
+lurker.plot_top("avg",layer_indx=12,filt_indx=7,plot_imgs=False,plot_grads=True)
+```
+<p align="center">
+  <img src="./imgs/grads.png">
+</p>
 
-## max_activ
-the artificial image obtained by gradient descent which gives the highest average output score for a given filter.
+<br>
 
-To summary we have:
-- 1: top4_avg
-- 2: top4_max
-- 3: avg_grads (deconvolution of top4_avg)
-- 4: max_grads (deconvolution of top4_max)
-- 5: cropped (cropped version of top4_max, slice of the original image resulting in the value which allowed the image to belong to top4_max
-- 6: cropped_grad (same cropping applied to max_grads)
-- 7: max_activ
+### 5. Histograms
 
+Torchlurk allows you to visualize the most activating classes of the training using histograms: a very peaked distribution is often asssociated with a specialized filter.
+```python
+# display the 
+lurker.plot_hist(layer_indx=12,filt_indx=7,hist_type="max",num_classes=12)
+```
+
+<p align="center">
+  <img src="./imgs/histo.png">
+</p>
+
+<br>
+
+### 6. Serving
+Torchlurk is equiped with a live update tool which allows you to visualize your computed results while coding.
+
+```python
+#serve the application on port 5001
+lurker.serve(port=5001)
+```
+<p align="center">
+  <img src="./imgs/served_tool.jpeg">
+</p>
+<p align="center">
+  <img src="./imgs/popup.jpeg">
+</p>
+
+```python
+lurker.end_serve()
+```
+
+
+Happy Lurking! 
+
+<h1> &#128373</h1>
